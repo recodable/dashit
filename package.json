@@ -1,5 +1,5 @@
 {
-  "name": "vite-template-solid",
+  "name": "@recodable/jumpdash",
   "version": "0.0.0",
   "description": "",
   "scripts": {
@@ -9,10 +9,17 @@
   },
   "license": "MIT",
   "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.5",
+    "tailwindcss": "^2.2.4",
     "vite": "^2.3.8",
     "vite-plugin-solid": "^2.0.0"
   },
   "dependencies": {
-    "solid-js": "^1.0.0"
+    "@guillotin/solid": "link:../guillotin/packages/solid",
+    "graphql": "^15.5.1",
+    "graphql-tag": "^2.12.5",
+    "solid-js": "^1.0.0",
+    "solid-transition-group": "^0.0.8"
   }
 }
