@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { createSignal } from "solid-js";
+import { createSignal, createComputed } from "solid-js";
 import { For, Dynamic, Show } from "solid-js/web";
 import {
   ModalOutlet,
@@ -11,6 +11,7 @@ import {
   GithubOpenPullRequestBlock,
 } from "./github";
 import { NPMDownloadBlock } from "./npm";
+import { createDebug } from "./utils";
 
 const App: Component = () => {
   const [blocks, setBlocks] = createSignal([
@@ -40,6 +41,8 @@ const App: Component = () => {
           <For each={blocks()}>
             {(Block) => {
               const [hovered, setHovered] = createSignal(false);
+              const [open, setOpen] = createSignal(false);
+              const focused = () => hovered() || open();
 
               return (
                 <li
@@ -47,13 +50,19 @@ const App: Component = () => {
                   onMouseEnter={() => setHovered(true)}
                   onMouseLeave={() => setHovered(false)}
                 >
-                  <Show when={hovered()}>
+                  <Show when={focused()}>
                     <div class="absolute top-0 right-0 px-3 py-2">
                       <select
-                        name="timeFrame"
+                        name="period"
                         class="bg-gray-600 text-gray-400"
+                        onFocusIn={() => setOpen(true)}
+                        onFocusOut={() => setOpen(false)}
                       >
                         <option value="">All time</option>
+                        <option value="today">Today</option>
+                        <option value="week">This week</option>
+                        <option value="month">This month</option>
+                        <option value="year">This year</option>
                       </select>
                     </div>
                   </Show>
