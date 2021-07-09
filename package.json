@@ -18,7 +18,6 @@
   "dependencies": {
     "@guillotin/solid": "link:../guillotin/packages/solid",
     "graphql": "^15.5.1",
-    "graphql-tag": "^2.12.5",
     "solid-js": "^1.0.0",
     "solid-transition-group": "^0.0.8"
   }
