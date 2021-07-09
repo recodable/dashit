@@ -10,13 +10,14 @@ import {
   GithubOpenIssueBlock,
   GithubOpenPullRequestBlock,
 } from "./github";
+import { NPMDownloadBlock } from "./npm";
 
 const App: Component = () => {
   const [blocks, setBlocks] = createSignal([
     GithubStarBlock,
     GithubOpenIssueBlock,
     GithubOpenPullRequestBlock,
-    // GithubStarBlock,
+    NPMDownloadBlock,
     // GithubStarBlock,
   ]);
 

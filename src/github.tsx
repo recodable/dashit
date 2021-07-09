@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { createResource, mergeProps, createEffect } from "solid-js";
+import { createResource, mergeProps } from "solid-js";
 import { SimpleMetricBlock } from "./blocks";
 
 type Props = {
@@ -79,8 +79,6 @@ export const GithubOpenPullRequestBlock = (props) => {
       }
     }
   `);
-
-  createEffect(() => console.log(data()));
 
   return (
     <SimpleMetricBlock
