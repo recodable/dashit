@@ -7,7 +7,7 @@ import { createRepoStats } from "./fetcher";
 const GithubStarBlock: Component<Props> = (props) => {
   props = mergeProps({ user: "solidjs", repo: "solid" }, props);
 
-  const [data] = createRepoStats(props);
+  const [data, actions] = createRepoStats(props);
 
   return (
     <SimpleMetricBlock
@@ -15,6 +15,7 @@ const GithubStarBlock: Component<Props> = (props) => {
       value={() => data().stargazers_count}
       uow="stars"
       {...data}
+      {...actions}
     />
   );
 };

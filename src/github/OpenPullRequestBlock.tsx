@@ -12,7 +12,7 @@ type PullRequestData = {
 const GithubOpenPullRequestBlock: Component<Props> = (props) => {
   props = mergeProps({ user: "solidjs", repo: "solid" }, props);
 
-  const [data] = createGithubGraphqlResource<PullRequestData>(`
+  const [data, actions] = createGithubGraphqlResource<PullRequestData>(`
     {
       repository(
         owner: ${JSON.stringify(props.user)},
@@ -31,6 +31,7 @@ const GithubOpenPullRequestBlock: Component<Props> = (props) => {
       value={() => data().data.repository.pullRequests.totalCount}
       uow="open PR"
       {...data}
+      {...actions}
     />
   );
 };

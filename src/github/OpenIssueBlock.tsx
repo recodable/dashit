@@ -7,7 +7,7 @@ import { createRepoStats } from "./fetcher";
 const GithubOpenIssueBlock: Component<Props> = (props) => {
   props = mergeProps({ user: "solidjs", repo: "solid" }, props);
 
-  const [data] = createRepoStats(props);
+  const [data, actions] = createRepoStats(props);
 
   return (
     <SimpleMetricBlock
@@ -15,6 +15,7 @@ const GithubOpenIssueBlock: Component<Props> = (props) => {
       value={() => data().open_issues_count}
       uow="open issues"
       {...data}
+      {...actions}
     />
   );
 };

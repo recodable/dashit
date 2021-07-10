@@ -19,14 +19,15 @@ export function createPackageResource({ name }: PackageParams) {
 export const NPMDownloadBlock: Component<Props> = (props) => {
   props = mergeProps({ name: "solid-js" }, props);
 
-  const [data] = createPackageResource(props);
+  const [data, actions] = createPackageResource(props);
 
   return (
     <SimpleMetricBlock
       title={`NPM Downloads: ${props.name}`}
-      loading={data.loading}
       value={() => data().evaluation.popularity.downloadsCount}
       uow="downloads"
+      {...data}
+      {...actions}
     />
   );
 };
