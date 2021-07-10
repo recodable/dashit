@@ -1,3 +1,4 @@
+import { createEffect } from "solid-js";
 import { render } from "solid-js/web";
 import "./index.css";
 import App from "./App";
@@ -15,5 +16,9 @@ fetchIntercept.register({
     return response;
   },
 });
+
+export const createDebug = (value) => {
+  createEffect(() => console.log(value));
+};
 
 render(() => <App />, document.getElementById("root"));

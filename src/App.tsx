@@ -1,22 +1,22 @@
 import type { Component } from "solid-js";
-import { createSignal } from "solid-js";
-import { For, Dynamic, Show, ErrorBoundary } from "solid-js/web";
+import { createSignal, lazy } from "solid-js";
+import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
 import {
   ModalOutlet,
   ModalBackground as BaseModalBackground,
 } from "@guillotin/solid";
-import {
-  GithubStarBlock,
-  GithubOpenIssueBlock,
-  GithubOpenPullRequestBlock,
-} from "./github";
+// import {
+//   GithubStarBlock,
+//   GithubOpenIssueBlock,
+//   GithubOpenPullRequestBlock,
+// } from "./github";
 import { NPMDownloadBlock } from "./npm";
 
 const App: Component = () => {
   const [blocks, setBlocks] = createSignal([
-    GithubStarBlock,
-    GithubOpenIssueBlock,
-    GithubOpenPullRequestBlock,
+    lazy(() => import("./github/StarBlock")),
+    lazy(() => import("./github/OpenIssueBlock")),
+    lazy(() => import("./github/OpenPullRequestBlock")),
     NPMDownloadBlock,
     // GithubStarBlock,
   ]);
@@ -93,7 +93,9 @@ const App: Component = () => {
                       </div>
                     </Show>
 
-                    <Dynamic component={Block} />
+                    <Suspense>
+                      <Dynamic component={Block} />
+                    </Suspense>
                   </ErrorBoundary>
                 </li>
               );

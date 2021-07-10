@@ -2,7 +2,7 @@ import { Component, createResource, mergeProps, createEffect } from "solid-js";
 import { SimpleMetricBlock } from "./blocks";
 
 type Props = {
-  name: string;
+  name?: string;
 };
 
 type PackageParams = Props;
