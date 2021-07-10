@@ -17,7 +17,6 @@
   "dependencies": {
     "@guillotin/solid": "link:../../../guillotin/packages/solid",
     "fetch-intercept": "^2.4.0",
-    "graphql": "^15.5.1",
     "solid-app-router": "^0.0.50",
     "solid-js": "^1.0.0",
     "solid-transition-group": "^0.0.8",
