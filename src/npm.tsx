@@ -23,7 +23,7 @@ export const NPMDownloadBlock: Component<Props> = (props) => {
 
   return (
     <SimpleMetricBlock
-      title={props.name}
+      title={`NPM Downloads: ${props.name}`}
       loading={data.loading}
       value={() => data().evaluation.popularity.downloadsCount}
       uow="downloads"

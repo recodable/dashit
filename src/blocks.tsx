@@ -14,7 +14,7 @@ export const SimpleMetricBlock: Component<{
 
         <div class="flex gap-2 items-baseline">
           <span>
-            <span class="text-4xl">{props.value()}</span>
+            <span class="text-4xl">{props.value}</span>
             {/* <span class="text-2xl ml-0.5">k</span> */}
           </span>
 

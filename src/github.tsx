@@ -40,8 +40,8 @@ export const GithubStarBlock: Component<Props> = (props) => {
     <SimpleMetricBlock
       title="Github Stars"
       value={() => data().stargazers_count}
-      loading={data.loading}
       uow="stars"
+      {...data}
     />
   );
 };
@@ -55,19 +55,21 @@ export const GithubOpenIssueBlock: Component<Props> = (props) => {
     <SimpleMetricBlock
       title="Github Issues"
       value={() => data().open_issues_count}
-      loading={data.loading}
       uow="open issues"
+      {...data}
     />
   );
+};
+
+type PullRequestData = {
+  data: { repository: { pullRequests: { totalCount: number } } };
 };
 
 // TODO: implement caching for graphql query (not possible with fetch atm because graphql request are POST)
 export const GithubOpenPullRequestBlock = (props) => {
   props = mergeProps({ user: "solidjs", repo: "solid" }, props);
 
-  const [data] = createGithubGraphqlResource<{
-    data: { repository: { pullRequests: { totalCount: number } } };
-  }>(`
+  const [data] = createGithubGraphqlResource<PullRequestData>(`
     {
       repository(
         owner: ${JSON.stringify(props.user)},
@@ -84,8 +86,8 @@ export const GithubOpenPullRequestBlock = (props) => {
     <SimpleMetricBlock
       title="Github PR"
       value={() => data().data.repository.pullRequests.totalCount}
-      loading={data.loading}
       uow="open PR"
+      {...data}
     />
   );
 };
