@@ -1,0 +1,25 @@
+{
+  "name": "@recodable/jumpdash",
+  "version": "0.0.0",
+  "scripts": {
+    "start": "vite",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "autoprefixer": "^10.2.6",
+    "postcss": "^8.3.5",
+    "tailwindcss": "^2.2.4",
+    "vite": "^2.3.8",
+    "vite-plugin-solid": "^2.0.0"
+  },
+  "dependencies": {
+    "@guillotin/solid": "link:../../../guillotin/packages/solid",
+    "fetch-intercept": "^2.4.0",
+    "graphql": "^15.5.1",
+    "solid-js": "^1.0.0",
+    "solid-transition-group": "^0.0.8",
+    "whatwg-fetch": "^3.6.2"
+  }
+}

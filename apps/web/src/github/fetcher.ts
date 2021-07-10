@@ -1,6 +1,5 @@
-import type { Component } from "solid-js";
-import { createResource, mergeProps } from "solid-js";
-import type { Props, RepoParams } from "./types";
+import { createResource } from "solid-js";
+import type { RepoParams } from "./types";
 
 export function createRepoStats({ user, repo }: RepoParams) {
   return createResource<{

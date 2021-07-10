@@ -5,11 +5,6 @@ import {
   ModalOutlet,
   ModalBackground as BaseModalBackground,
 } from "@guillotin/solid";
-// import {
-//   GithubStarBlock,
-//   GithubOpenIssueBlock,
-//   GithubOpenPullRequestBlock,
-// } from "./github";
 import { NPMDownloadBlock } from "./npm";
 
 const App: Component = () => {
