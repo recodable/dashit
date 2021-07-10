@@ -1,7 +1,6 @@
 import type { Component } from "solid-js";
-import { Switch, Match, Show } from "solid-js/web";
+import { Switch, Match } from "solid-js/web";
 import Loading from "./Loading";
-import { createEffect } from "solid-js";
 
 export const SimpleMetricBlock: Component<{
   loading: boolean;
@@ -20,13 +19,7 @@ export const SimpleMetricBlock: Component<{
 
       <Match when={!props.loading}>
         <div onClick={props.refetch}>
-          <div class="flex items-baseline gap-1">
-            <h4 class="text-lg font-thin text-gray-400">{props.title}</h4>
-
-            <Show when={props.loading}>
-              <Loading />
-            </Show>
-          </div>
+          <h4 class="text-lg font-thin text-gray-400 mb-3">{props.title}</h4>
 
           <div class="flex gap-2 items-baseline">
             <span>

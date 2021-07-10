@@ -12,6 +12,7 @@ importers:
       fetch-intercept: ^2.4.0
       graphql: ^15.5.1
       postcss: ^8.3.5
+      solid-app-router: ^0.0.50
       solid-js: ^1.0.0
       solid-transition-group: ^0.0.8
       tailwindcss: ^2.2.4
@@ -22,6 +23,7 @@ importers:
       '@guillotin/solid': link:../../../guillotin/packages/solid
       fetch-intercept: 2.4.0
       graphql: 15.5.1
+      solid-app-router: 0.0.50_solid-js@1.0.1
       solid-js: 1.0.1
       solid-transition-group: 0.0.8_solid-js@1.0.1
       whatwg-fetch: 3.6.2
@@ -1170,6 +1172,14 @@ packages:
     dependencies:
       is-arrayish: 0.3.2
     dev: true
+
+  /solid-app-router/0.0.50_solid-js@1.0.1:
+    resolution: {integrity: sha512-TjaTCuvDeBEqTiIYcvGltM/Ae9y/qurOr5g47DvMdgR/8XiMhoktBH9weISXcxqb4KE4cVaaoAV+G+5tboEDEA==}
+    peerDependencies:
+      solid-js: ^1.0.0
+    dependencies:
+      solid-js: 1.0.1
+    dev: false
 
   /solid-js/1.0.1:
     resolution: {integrity: sha512-/kKvlcrnksrXceCJJdZtctKJv/88+/415USXC54iUOZsnPKz0PUBkn0ZAO/mXqIhJKPpNwuoL+fQauUi067AUQ==}
