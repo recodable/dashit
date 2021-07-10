@@ -1,5 +1,6 @@
 import type { Component } from "solid-js";
 import { Show } from "solid-js/web";
+import Loading from "./Loading";
 
 export const SimpleMetricBlock: Component<{
   loading: boolean;
@@ -8,8 +9,14 @@ export const SimpleMetricBlock: Component<{
   uow: string;
 }> = (props) => {
   return (
-    <Show when={!props.loading}>
-      <div class="rounded">
+    <>
+      <Show when={props.loading}>
+        <div class="flex justify-center items-center w-full h-full">
+          <Loading class="w-8 h-8" />
+        </div>
+      </Show>
+
+      <Show when={!props.loading}>
         <h4 class="text-lg font-thin text-gray-400">{props.title}</h4>
 
         <div class="flex gap-2 items-baseline">
@@ -20,7 +27,7 @@ export const SimpleMetricBlock: Component<{
 
           <span class="font-mono">{props.uow}</span>
         </div>
-      </div>
-    </Show>
+      </Show>
+    </>
   );
 };
