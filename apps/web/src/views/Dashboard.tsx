@@ -16,13 +16,27 @@ const Dashboard: Component = () => {
   return (
     <div class="p-16">
       <div class="flex justify-between w-full px-2">
-        <h1 class="text-4xl font-bold">Recodable Dashboard</h1>
+        <h1 class="text-4xl font-extrabold">Recodable Dashboard</h1>
 
         <Link
           href="/add"
-          class="bg-gray-600 rounded-lg hover:bg-gray-700 px-8 py-4 hover:text-gray-200"
+          class="flex items-center gap-3 bg-gray-600 rounded-lg hover:bg-gray-700 px-8 py-4 hover:text-gray-200 text-xl"
         >
-          <span class="text-xl">Add Block</span>
+          <svg
+            xmlns="http://www.w3.org/2000/svg"
+            class="h-5 w-5"
+            fill="none"
+            viewBox="0 0 24 24"
+            stroke="currentColor"
+          >
+            <path
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="M12 4v16m8-8H4"
+            />
+          </svg>
+          <span>Add Block</span>
         </Link>
       </div>
 
@@ -35,7 +49,7 @@ const Dashboard: Component = () => {
 
             return (
               <li
-                class="relative h-32 p-4 rounded-lg bg-gray-800 text-white hover:bg-gray-700 cursor-pointer shadow"
+                class="small-card"
                 onMouseEnter={() => setHovered(true)}
                 onMouseLeave={() => setHovered(false)}
               >

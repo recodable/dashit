@@ -7,12 +7,12 @@ import { Route } from "solid-app-router";
 
 const App: Component = () => {
   return (
-    <>
+    <div class="relative">
       <ModalOutlet
         Background={(props) => (
           <BaseModalBackground
             backgroundColor="black"
-            opacity={0.6}
+            opacity={0.8}
             {...props}
           />
         )}
@@ -21,7 +21,7 @@ const App: Component = () => {
       <main class="bg-gray-900 min-h-screen min-w-screen text-white">
         <Route />
       </main>
-    </>
+    </div>
   );
 };
 

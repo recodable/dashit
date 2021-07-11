@@ -17,6 +17,8 @@
   "dependencies": {
     "@guillotin/solid": "link:../../../guillotin/packages/solid",
     "fetch-intercept": "^2.4.0",
+    "hotkeys-js": "^3.8.7",
+    "lodash.debounce": "^4.0.8",
     "solid-app-router": "^0.0.50",
     "solid-js": "^1.0.0",
     "solid-transition-group": "^0.0.8",

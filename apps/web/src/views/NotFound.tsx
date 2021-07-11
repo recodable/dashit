@@ -10,10 +10,7 @@ const NotFound: Component = () => {
         It looks like you reached an impasse
       </p>
 
-      <Link
-        href="/"
-        class="font-semibold text-lg text-red-500 hover:text-red-700 flex items-center gap-2"
-      >
+      <Link href="/" class="clickable-text">
         <svg
           xmlns="http://www.w3.org/2000/svg"
           class="h-4 w-4"

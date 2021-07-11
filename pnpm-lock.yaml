@@ -10,6 +10,8 @@ importers:
       '@guillotin/solid': link:../../../guillotin/packages/solid
       autoprefixer: ^10.2.6
       fetch-intercept: ^2.4.0
+      hotkeys-js: ^3.8.7
+      lodash.debounce: ^4.0.8
       postcss: ^8.3.5
       solid-app-router: ^0.0.50
       solid-js: ^1.0.0
@@ -21,6 +23,8 @@ importers:
     dependencies:
       '@guillotin/solid': link:../../../guillotin/packages/solid
       fetch-intercept: 2.4.0
+      hotkeys-js: 3.8.7
+      lodash.debounce: 4.0.8
       solid-app-router: 0.0.50_solid-js@1.0.1
       solid-js: 1.0.1
       solid-transition-group: 0.0.8_solid-js@1.0.1
@@ -770,6 +774,10 @@ packages:
       function-bind: 1.1.1
     dev: true
 
+  /hotkeys-js/3.8.7:
+    resolution: {integrity: sha512-ckAx3EkUr5XjDwjEHDorHxRO2Kb7z6Z2Sxul4MbBkN8Nho7XDslQsgMJT+CiJ5Z4TgRxxvKHEpuLE3imzqy4Lg==}
+    dev: false
+
   /html-tags/3.1.0:
     resolution: {integrity: sha512-1qYz89hW3lFDEazhjW0yVAV87lw8lVkrJocr72XmBkMKsoSVJCQx3W8BXsC7hO2qAt8BoVjYjtAcZ9perqGnNg==}
     engines: {node: '>=8'}
@@ -888,6 +896,10 @@ packages:
   /lines-and-columns/1.1.6:
     resolution: {integrity: sha1-HADHQ7QzzQpOgHWPe2SldEDZ/wA=}
     dev: true
+
+  /lodash.debounce/4.0.8:
+    resolution: {integrity: sha1-gteb/zCmfEAF/9XiUVMArZyk168=}
+    dev: false
 
   /lodash.toarray/4.4.0:
     resolution: {integrity: sha1-JMS/zWsvuji/0FlNsRedjptlZWE=}

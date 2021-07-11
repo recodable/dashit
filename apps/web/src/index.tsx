@@ -19,10 +19,6 @@ fetchIntercept.register({
   },
 });
 
-export const createDebug = (value) => {
-  createEffect(() => console.log(value));
-};
-
 render(
   () => (
     <Router routes={routes}>
