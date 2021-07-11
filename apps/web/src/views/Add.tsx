@@ -21,6 +21,8 @@ import { setModal } from "@guillotin/solid";
 import hotkeys from "hotkeys-js";
 import SearchField from "../SearchField";
 // import debounce from "lodash.debounce";
+import { Link } from "solid-app-router";
+import { ChevronLeft, PlusCircle, Minus, Plus } from "../icons";
 
 type Block = {
   name: string;
@@ -56,6 +58,11 @@ const CreateBlock: Component = () => {
     <div class="p-16 flex flex-col justify-center items-center">
       <div style="width: 768px;">
         <div class="my-12">
+          <Link href="/" class="clickable-text mb-2">
+            <ChevronLeft class="w-4 h-4" />
+            <span>Back to dashboard</span>
+          </Link>
+
           <div class="flex justify-between">
             <h1 class="text-4xl font-extrabold">Add Block</h1>
 
@@ -96,18 +103,7 @@ const CreateBlock: Component = () => {
                   >
                     <Show when={hovered()}>
                       <div class="absolute inset-0 bg-purple-800 opacity-70 flex justify-center items-center text-purple-200">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-7 w-7"
-                          viewBox="0 0 20 20"
-                          fill="currentColor"
-                        >
-                          <path
-                            fill-rule="evenodd"
-                            d="M10 18a8 8 0 100-16 8 8 0 000 16zm1-11a1 1 0 10-2 0v2H7a1 1 0 100 2h2v2a1 1 0 102 0v-2h2a1 1 0 100-2h-2V7z"
-                            clip-rule="evenodd"
-                          />
-                        </svg>
+                        <PlusCircle class="w-7 h-7" />
                       </div>
                     </Show>
 
@@ -285,8 +281,8 @@ const SearchRepoForm: Component = () => {
 
   const resultRepositories: () => Repo[] = () =>
     repositories()
-      .items.slice(0, 5)
-      .filter((repository) => repository.id !== selectedRepo()?.id);
+      .items.filter((repository) => repository.id !== selectedRepo()?.id)
+      .slice(0, 5);
 
   const [selectedRepo, setSelectedRepo] = createSignal<Repo>(null);
 
@@ -318,20 +314,7 @@ const SearchRepoForm: Component = () => {
                 class="cursor-pointer flex gap-3 items-center"
               >
                 <span class="w-5 h-5 rounded-md bg-red-700 text-white flex justify-center items-center">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-3 w-3"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M20 12H4"
-                    />
-                  </svg>
+                  <Minus class="w-3 h-3" />
                 </span>
 
                 <span>{selectedRepo().full_name}</span>
@@ -352,20 +335,7 @@ const SearchRepoForm: Component = () => {
                       class="cursor-pointer flex gap-3 items-center"
                     >
                       <span class="w-5 h-5 rounded-md bg-green-700 text-white flex justify-center items-center">
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-3 w-3"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="4"
-                            d="M12 4v16m8-8H4"
-                          />
-                        </svg>
+                        <Plus class="w-3 h-3" />
                       </span>
                       <span>{repository.full_name}</span>
                     </button>

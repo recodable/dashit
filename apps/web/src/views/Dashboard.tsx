@@ -4,6 +4,7 @@ import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
 import { NPMDownloadBlock } from "../npm";
 import { Transition } from "solid-transition-group";
 import { Link } from "solid-app-router";
+import { ExclamationCicle, Plus } from "../icons";
 
 const Dashboard: Component = () => {
   const [blocks, setBlocks] = createSignal([
@@ -22,20 +23,7 @@ const Dashboard: Component = () => {
           href="/add"
           class="flex items-center gap-3 bg-gray-600 rounded-lg hover:bg-gray-700 px-8 py-4 hover:text-gray-200 text-xl"
         >
-          <svg
-            xmlns="http://www.w3.org/2000/svg"
-            class="h-5 w-5"
-            fill="none"
-            viewBox="0 0 24 24"
-            stroke="currentColor"
-          >
-            <path
-              stroke-linecap="round"
-              stroke-linejoin="round"
-              stroke-width="2"
-              d="M12 4v16m8-8H4"
-            />
-          </svg>
+          <Plus class="w-5 h-5" />
           <span>Add Block</span>
         </Link>
       </div>
@@ -60,21 +48,7 @@ const Dashboard: Component = () => {
                         onClick={reset}
                         class="w-full h-full flex justify-center items-center gap-2 text-red-700"
                       >
-                        <svg
-                          xmlns="http://www.w3.org/2000/svg"
-                          class="h-6 w-6"
-                          fill="none"
-                          viewBox="0 0 24 24"
-                          stroke="currentColor"
-                        >
-                          <path
-                            stroke-linecap="round"
-                            stroke-linejoin="round"
-                            stroke-width="2"
-                            d="M12 8v4m0 4h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"
-                          />
-                        </svg>
-
+                        <ExclamationCicle class="h-6 w-6" />
                         <p class="">Couldn't load the data, click to retry</p>
                       </div>
                     );

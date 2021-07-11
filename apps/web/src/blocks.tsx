@@ -1,6 +1,6 @@
 import type { Component } from "solid-js";
 import { Switch, Match } from "solid-js/web";
-import Loading from "./Loading";
+import { Loading } from "./icons";
 
 export const SimpleMetricBlock: Component<{
   loading: boolean;

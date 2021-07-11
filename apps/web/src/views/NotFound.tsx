@@ -1,5 +1,6 @@
 import { Link } from "solid-app-router";
 import type { Component } from "solid-js";
+import { ArrowLeft } from "../icons";
 
 const NotFound: Component = () => {
   return (
@@ -11,20 +12,7 @@ const NotFound: Component = () => {
       </p>
 
       <Link href="/" class="clickable-text">
-        <svg
-          xmlns="http://www.w3.org/2000/svg"
-          class="h-4 w-4"
-          fill="none"
-          viewBox="0 0 24 24"
-          stroke="currentColor"
-        >
-          <path
-            stroke-linecap="round"
-            stroke-linejoin="round"
-            stroke-width="2"
-            d="M10 19l-7-7m0 0l7-7m-7 7h18"
-          />
-        </svg>
+        <ArrowLeft class="w-4 h-4" />
 
         <span>Take me back</span>
       </Link>
