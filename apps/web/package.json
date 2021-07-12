@@ -3,12 +3,20 @@
   "version": "0.0.0",
   "scripts": {
     "start": "vite",
-    "dev": "vite",
-    "build": "vite build"
+    "dev": "concurrently npm:dev:*",
+    "dev:app": "vite",
+    "dev:server": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node --files src/server.ts'",
+    "dev:db": "docker-compose up -d",
+    "build": "vite build",
+    "knex": "TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' knex",
+    "make:migration": "knex migrate:make -x ts",
+    "db:migrate": "knex migrate:latest"
   },
-  "license": "MIT",
   "devDependencies": {
+    "@types/node": "^16.3.1",
     "autoprefixer": "^10.2.6",
+    "concurrently": "^6.2.0",
+    "nodemon": "^2.0.12",
     "postcss": "^8.3.5",
     "tailwindcss": "^2.2.4",
     "vite": "^2.3.8",
@@ -18,10 +26,14 @@
     "@guillotin/solid": "link:../../../guillotin/packages/solid",
     "fetch-intercept": "^2.4.0",
     "hotkeys-js": "^3.8.7",
+    "knex": "^0.95.7",
     "lodash.debounce": "^4.0.8",
+    "pg": "^8.6.0",
     "solid-app-router": "^0.0.50",
     "solid-js": "^1.0.0",
     "solid-transition-group": "^0.0.8",
+    "ts-node": "^10.1.0",
+    "typescript": "^4.3.5",
     "whatwg-fetch": "^3.6.2"
   }
 }
