@@ -51,6 +51,7 @@ const SearchField: Component<Props> = (props) => {
         name="search"
         use:model={props.model}
         type="text"
+        autocomplete="off"
         class="bg-gray-700 placeholder-gray-500 text-gray-100 outline-none"
         {...props}
       />
