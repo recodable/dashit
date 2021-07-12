@@ -5,7 +5,7 @@ import { Loading } from "./icons";
 export const SimpleMetricBlock: Component<{
   loading: boolean;
   title: string;
-  value: () => string | number;
+  value: () => number;
   uow: string;
   refetch: () => void;
 }> = (props) => {
@@ -23,7 +23,7 @@ export const SimpleMetricBlock: Component<{
 
           <div class="flex gap-2 items-baseline">
             <span>
-              <span class="text-4xl">{props.value}</span>
+              <span class="text-4xl">{Math.round(props.value())}</span>
               {/* <span class="text-2xl ml-0.5">k</span> */}
             </span>
 
