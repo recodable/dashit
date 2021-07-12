@@ -6,8 +6,8 @@ type Stylable = { class?: string };
 function overrideClass(className: string) {
   return {
     classList: {
-      "w-5": !className.match("w-"),
-      "h-5": !className.match("h-"),
+      "w-5": !className.match(/\bw-[a-zA-Z0-9]+\b/),
+      "h-5": !className.match(/\bh-[a-zA-Z0-9]+\b/),
       [className]: true,
     },
   };
@@ -47,7 +47,6 @@ export const Search: Component<Stylable> = (props) => {
     <svg
       {...overrideClass(props.class)}
       xmlns="http://www.w3.org/2000/svg"
-      class="h-6 w-6"
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
