@@ -4,6 +4,7 @@ import { createResource } from "solid-js";
 import { For } from "solid-js/web";
 import { Link } from "solid-app-router";
 import type { Dashboard } from "../types";
+import { TransitionGroup } from "solid-transition-group";
 
 const Index: Component = () => {
   const [dashboards, { mutate }] = createResource<Dashboard[]>(() => {
@@ -39,22 +40,28 @@ const Index: Component = () => {
       </div>
 
       <ul class="flex flex-col justify-center gap-8 my-8 w-full">
-        <For each={dashboards()}>
-          {(dashboard) => {
-            return (
-              <li class="card">
-                <Link
-                  href={`/${dashboard.id}`}
-                  class="flex justify-between px-8 py-10"
-                >
-                  <h2>{dashboard.name}</h2>
+        <TransitionGroup
+          enterActiveClass="transition-all ease-in-out duration-400"
+          enterClass="opacity-0"
+          enterToClass="opacity-100"
+        >
+          <For each={dashboards()}>
+            {(dashboard) => {
+              return (
+                <li class="card">
+                  <Link
+                    href={`/${dashboard.id}`}
+                    class="flex justify-between px-8 py-10"
+                  >
+                    <h2>{dashboard.name}</h2>
 
-                  <ChevronRight class="w-8 h-8" />
-                </Link>
-              </li>
-            );
-          }}
-        </For>
+                    <ChevronRight class="w-8 h-8" />
+                  </Link>
+                </li>
+              );
+            }}
+          </For>
+        </TransitionGroup>
       </ul>
     </div>
   );

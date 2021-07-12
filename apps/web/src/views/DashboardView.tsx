@@ -24,8 +24,6 @@ const DashboardView: Component = () => {
     ).then((response) => response.json());
   });
 
-  console.log(dashboard());
-
   return (
     <>
       <Show when={dashboard.loading}>
