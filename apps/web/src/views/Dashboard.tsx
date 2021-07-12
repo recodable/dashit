@@ -17,12 +17,9 @@ const Dashboard: Component = () => {
   return (
     <div class="p-16">
       <div class="flex justify-between w-full px-2">
-        <h1 class="text-4xl font-extrabold">Recodable Dashboard</h1>
+        <h1>Recodable Dashboard</h1>
 
-        <Link
-          href="/add"
-          class="flex items-center gap-3 bg-gray-600 rounded-lg hover:bg-gray-700 px-8 py-4 hover:text-gray-200 text-xl"
-        >
+        <Link href="/add" class="button">
           <Plus class="w-5 h-5" />
           <span>Add Block</span>
         </Link>

@@ -13,7 +13,12 @@ const db = knex({
 });
 
 createServer(async (req, res) => {
-  res.writeHead(200, { "Content-Type": "application/json" });
+  res.writeHead(200, {
+    "Content-Type": "application/json",
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
+    "Access-Control-Max-Age": 2592000,
+  });
 
   let data = "";
   req.on("data", (chunk) => {
@@ -21,24 +26,42 @@ createServer(async (req, res) => {
   });
 
   req.on("end", async () => {
-    const body = JSON.parse(data);
+    const body = data ? JSON.parse(data) : null;
 
-    switch ([req.method, req.url].join(" ")) {
-      case "POST /dashboards":
-        const { name } = body;
-        const newDashboard = await db("dashboards")
-          .insert({ name })
-          .returning("*");
-        res.end(JSON.stringify(newDashboard[0]));
-        break;
+    const pattern = [req.method, req.url].join(" ");
 
-      case "GET /dashboards":
-        res.end(JSON.stringify(await db.select("*").from("dashboards")));
-        break;
+    if (pattern === "POST /dashboards") {
+      const { name = "(Untitled)" } = body;
 
-      default:
-        res.statusCode = 404;
-        res.end("Not Found");
+      const newDashboard = await db("dashboards")
+        .insert({ name })
+        .returning("*");
+
+      return res.end(JSON.stringify(newDashboard[0]));
     }
+
+    if (pattern === "GET /dashboards") {
+      return res.end(
+        JSON.stringify(
+          await db.select("*").from("dashboards").orderBy("created_at", "desc")
+        )
+      );
+    }
+
+    if (pattern === "GET /dashboards") {
+      return res.end(JSON.stringify(await db.select("*").from("dashboards")));
+    }
+
+    // if (pattern.match(/^GET \/dashboards\/.+$/)) {
+    //   return res.end(
+    //     JSON.stringify([
+    //       { id: 1, name: "Recodable Dashboard" },
+    //       { id: 2, name: "SolidJS Dashboard" },
+    //     ])
+    //   );
+    // }
+
+    res.statusCode = 404;
+    return res.end("Not Found");
   });
 }).listen(8000);

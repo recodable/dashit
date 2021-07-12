@@ -5,7 +5,7 @@ import { ArrowLeft } from "../icons";
 const NotFound: Component = () => {
   return (
     <div class="w-screen h-screen flex flex-col justify-center items-center gap-4">
-      <h1 class="text-5xl font-bold">404</h1>
+      <span class="text-5xl font-bold">404</span>
 
       <p class="text-2xl font-light text-gray-500">
         It looks like you reached an impasse

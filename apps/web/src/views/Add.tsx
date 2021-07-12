@@ -64,7 +64,7 @@ const CreateBlock: Component = () => {
           </Link>
 
           <div class="flex justify-between">
-            <h1 class="text-4xl font-extrabold">Add Block</h1>
+            <h1>Add Block</h1>
 
             <SearchField
               model={[formData, setFormData]}
