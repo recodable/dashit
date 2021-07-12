@@ -33,11 +33,11 @@ createServer(async (req, res) => {
     if (pattern === "POST /dashboards") {
       const { name = "(Untitled)" } = body;
 
-      const newDashboard = await db("dashboards")
+      const [newDashboard] = await db("dashboards")
         .insert({ name })
         .returning("*");
 
-      return res.end(JSON.stringify(newDashboard[0]));
+      return res.end(JSON.stringify(newDashboard));
     }
 
     if (pattern === "GET /dashboards") {
@@ -52,16 +52,20 @@ createServer(async (req, res) => {
       return res.end(JSON.stringify(await db.select("*").from("dashboards")));
     }
 
-    // if (pattern.match(/^GET \/dashboards\/.+$/)) {
-    //   return res.end(
-    //     JSON.stringify([
-    //       { id: 1, name: "Recodable Dashboard" },
-    //       { id: 2, name: "SolidJS Dashboard" },
-    //     ])
-    //   );
-    // }
+    let matches;
+    if ((matches = pattern.match(/^GET \/dashboards\/(.+)$/))) {
+      return res.end(
+        JSON.stringify(
+          await db
+            .select("*")
+            .from("dashboards")
+            .where({ id: matches[1] })
+            .first()
+        )
+      );
+    }
 
-    res.statusCode = 404;
+    res.writeHead(404);
     return res.end("Not Found");
   });
 }).listen(8000);

@@ -1,11 +1,11 @@
 import Index from "./views/Index";
-import Dashboard from "./views/Dashboard";
+import DashboardView from "./views/DashboardView";
 import Add from "./views/Add";
 import NotFound from "./views/NotFound";
 
 const routes = [
   { path: "/", component: Index },
-  { path: "/:id", component: Dashboard },
+  { path: "/:id", component: DashboardView },
   { path: "/:id/add", component: Add },
   { path: "*all", component: NotFound },
 ];

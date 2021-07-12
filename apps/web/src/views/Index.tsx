@@ -3,21 +3,17 @@ import { ChevronRight, Plus } from "../icons";
 import { createResource } from "solid-js";
 import { For } from "solid-js/web";
 import { Link } from "solid-app-router";
-
-type Dashboard = {
-  id: number;
-  name: string;
-};
+import type { Dashboard } from "../types";
 
 const Index: Component = () => {
   const [dashboards, { mutate }] = createResource<Dashboard[]>(() => {
-    return fetch("http://localhost:8000/dashboards").then((response) =>
-      response.json()
+    return fetch(`${import.meta.env.VITE_API_URL}/dashboards`).then(
+      (response) => response.json()
     );
   });
 
   const createNewDashboard = () => {
-    return fetch("http://localhost:8000/dashboards", {
+    return fetch(`${import.meta.env.VITE_API_URL}/dashboards`, {
       method: "POST",
       body: JSON.stringify({}),
     }).then((response) => response.json());
@@ -37,7 +33,7 @@ const Index: Component = () => {
         >
           <button type="submit" class="button">
             <Plus />
-            <span>Create Dashboard</span>
+            <span>New Dashboard</span>
           </button>
         </form>
       </div>
