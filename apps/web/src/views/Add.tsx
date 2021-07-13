@@ -11,17 +11,20 @@ import { ChevronLeft, PlusCircle, Minus, Plus } from "../icons";
 import createHotkey from "../hotkey";
 import registry from "../registry";
 import type { Block } from "../types";
+import { useRouter } from "solid-app-router";
 
 const [blocks, setBlocks] = createSignal<Block[]>(registry);
 
 const CreateBlock: Component = () => {
   const [formData, setFormData] = createStore({ search: "" });
 
+  const [router] = useRouter();
+
   return (
     <div class="p-16 flex flex-col justify-center items-center">
       <div style="width: 768px;">
         <div class="my-12">
-          <Link href="/" class="clickable-text mb-2">
+          <Link href={`/${router.params.id}`} class="clickable-text mb-2">
             <ChevronLeft class="w-4 h-4" />
             <span>Back to dashboard</span>
           </Link>
