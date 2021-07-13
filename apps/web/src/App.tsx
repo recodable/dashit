@@ -2,6 +2,7 @@ import type { Component } from "solid-js";
 import {
   ModalOutlet,
   ModalBackground as BaseModalBackground,
+  ToasterBag,
 } from "@guillotin/solid";
 import { Route } from "solid-app-router";
 
@@ -17,6 +18,8 @@ const App: Component = () => {
           />
         )}
       />
+
+      <ToasterBag x={"center"} y="bottom" />
 
       <main class="bg-gray-900 min-h-screen min-w-screen text-white">
         <Route />

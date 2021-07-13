@@ -13,13 +13,21 @@ const db = knex({
 });
 
 createServer(async (req, res) => {
+  let matches;
   try {
-    res.writeHead(200, {
-      "Content-Type": "application/json",
-      "Access-Control-Allow-Origin": "*",
-      "Access-Control-Allow-Methods": "OPTIONS, POST, GET",
-      "Access-Control-Max-Age": 2592000,
-    });
+    res.setHeader("Content-Type", "application/json");
+    res.setHeader("Access-Control-Allow-Origin", "*");
+    res.setHeader(
+      "Access-Control-Allow-Methods",
+      "OPTIONS,GET,HEAD,PUT,PATCH,POST,DELETE"
+    );
+    res.setHeader("Access-Control-Max-Age", 2592000);
+
+    if (req.method === "OPTIONS") {
+      res.writeHead(204);
+      res.end();
+      return;
+    }
 
     let data = "";
     req.on("data", (chunk) => {
@@ -56,7 +64,6 @@ createServer(async (req, res) => {
         return res.end(JSON.stringify(await db.select("*").from("dashboards")));
       }
 
-      let matches;
       if ((matches = pattern.match(/^GET \/dashboards\/(.+)$/))) {
         return res.end(
           JSON.stringify(
@@ -69,15 +76,25 @@ createServer(async (req, res) => {
         );
       }
 
+      if ((matches = pattern.match(/^PUT \/dashboards\/(.+)$/))) {
+        const [updatedDashboard] = await db
+          .from("dashboards")
+          .where({ id: matches[1] })
+          .update({
+            name: body.name || "(Untitled)",
+          })
+          .returning("*");
+
+        return res.end(JSON.stringify(updatedDashboard));
+      }
+
       res.writeHead(404);
       return res.end("Not Found");
     });
   } catch (e) {
-    if (process.env.NODE_END === "production") {
-      res.writeHead(500);
-      return res.end("Something very wrong happened.");
-    }
+    console.error(e);
 
-    throw e;
+    res.writeHead(500);
+    return res.end("Something very wrong happened.");
   }
 }).listen(8000);

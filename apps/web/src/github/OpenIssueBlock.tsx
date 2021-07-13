@@ -5,14 +5,17 @@ import type { Props } from "./types";
 import { createRepoStats } from "./fetcher";
 
 const GithubOpenIssueBlock: Component<Props> = (props) => {
-  props = mergeProps({ user: "solidjs", repo: "solid" }, props);
+  props = mergeProps(
+    { user: "solidjs", repo: "solid", isPreview: false },
+    props
+  );
 
   const [data, actions] = createRepoStats(props);
 
   return (
     <SimpleMetricBlock
       title="Github Issues"
-      value={() => data().open_issues_count}
+      value={() => (props.isPreview ? 1234 : data().open_issues_count)}
       uow="open issues"
       {...data}
       {...actions}

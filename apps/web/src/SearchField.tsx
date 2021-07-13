@@ -1,22 +1,8 @@
 import type { Component } from "solid-js";
-import type { Store, SetStoreFunction } from "solid-js/store";
-import { createRenderEffect, mergeProps } from "solid-js";
+import { mergeProps, createRenderEffect } from "solid-js";
 import { Show } from "solid-js/web";
+import type { Store, SetStoreFunction } from "solid-js/store";
 import { Loading, Search } from "./icons";
-
-type SearchableFormData = {
-  search: string;
-};
-
-type Model = [
-  Store<Partial<SearchableFormData>>,
-  SetStoreFunction<Partial<SearchableFormData>>
-];
-
-interface Props extends Partial<HTMLInputElement> {
-  model: Model;
-  loading?: boolean;
-}
 
 declare module "solid-js" {
   namespace JSX {
@@ -26,12 +12,23 @@ declare module "solid-js" {
   }
 }
 
-export function model(el, value: () => Model) {
+export type Model<T> = [Store<Partial<T>>, SetStoreFunction<Partial<T>>];
+
+export function model<T>(el, value: () => Model<T>) {
   const [formData, setFormData] = value();
   createRenderEffect(() => (el.value = formData[el.name]));
   el.addEventListener("input", (e) =>
     setFormData({ [e.target.name]: e.target.value })
   );
+}
+
+type SearchableFormData = {
+  search: string;
+};
+
+interface Props extends Partial<HTMLInputElement> {
+  model: Model<SearchableFormData>;
+  loading?: boolean;
 }
 
 const SearchField: Component<Props> = (props) => {

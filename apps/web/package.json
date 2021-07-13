@@ -5,7 +5,7 @@
     "start": "vite",
     "dev": "concurrently npm:dev:*",
     "dev:app": "vite",
-    "dev:server": "nodemon --watch 'src/**' --ext 'ts,json' --exec 'ts-node --files src/server.ts'",
+    "dev:server": "nodemon --watch 'src/server.ts' --ext 'ts,json' --exec 'ts-node --files src/server.ts'",
     "dev:db": "docker-compose up -d",
     "build": "vite build",
     "knex": "TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' knex",

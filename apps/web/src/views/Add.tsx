@@ -1,55 +1,18 @@
 import type { Component } from "solid-js";
-import {
-  createSignal,
-  lazy,
-  onCleanup,
-  mergeProps,
-  createResource,
-} from "solid-js";
+import { createSignal, mergeProps, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
-import {
-  For,
-  Dynamic,
-  Show,
-  Index,
-  Switch,
-  Match,
-  ErrorBoundary,
-} from "solid-js/web";
+import { For, Dynamic, Show, Index, ErrorBoundary } from "solid-js/web";
 import { TransitionGroup } from "solid-transition-group";
 import { setModal } from "@guillotin/solid";
-import hotkeys from "hotkeys-js";
 import SearchField from "../SearchField";
 // import debounce from "lodash.debounce";
 import { Link } from "solid-app-router";
 import { ChevronLeft, PlusCircle, Minus, Plus } from "../icons";
+import createHotkey from "../hotkey";
+import registry from "../registry";
+import type { Block } from "../types";
 
-type Block = {
-  name: string;
-  description: string;
-  Component: Component;
-};
-
-const [blocks, setBlocks] = createSignal<Block[]>([
-  {
-    name: "Github Star",
-    description:
-      "See all your Github stars evolution over time on one repository",
-    Component: lazy(() => import("../github/StarBlock")),
-  },
-  {
-    name: "Github Issue",
-    description:
-      "See how  many issues are open at the moment on one repository",
-    Component: lazy(() => import("../github/OpenIssueBlock")),
-  },
-  {
-    name: "Github PR",
-    description: "See how  many PR are open at the moment on one reposirory",
-    Component: lazy(() => import("../github/OpenPullRequestBlock")),
-  },
-  // NPMDownloadBlock,
-]);
+const [blocks, setBlocks] = createSignal<Block[]>(registry);
 
 const CreateBlock: Component = () => {
   const [formData, setFormData] = createStore({ search: "" });
@@ -107,7 +70,7 @@ const CreateBlock: Component = () => {
                       </div>
                     </Show>
 
-                    <Dynamic component={block.Component} />
+                    <Dynamic component={block.Component} isPreview />
                   </li>
                 );
               }}
@@ -128,95 +91,94 @@ const NewBlockModal: Component<{ block: Block; closeModal: () => void }> = (
 
   const [stepIndex, setStepIndex] = createSignal(0);
 
+  const steps = [
+    false
+      ? () => (
+          <>
+            <div class="text-center">
+              <h3 class="text-2xl font-bold">{props.block.name}</h3>
+
+              <p class="text-gray-500">{props.block.description}</p>
+            </div>
+
+            <ChooseBlockTypeForm
+              onCancel={props.closeModal}
+              onSubmit={() => setStepIndex((stepIndex) => stepIndex + 1)}
+            />
+          </>
+        )
+      : null,
+    () => (
+      <>
+        <div class="text-center">
+          <h3 class="text-2xl font-bold">Select your repository</h3>
+
+          <p class="text-gray-500">
+            We will track the star from this repository
+          </p>
+        </div>
+
+        <ErrorBoundary
+          fallback={(error, reset) => (
+            <div
+              class="w-full flex flex-col justify-center items-center gap-4 font-semibold"
+              style="min-height: 120px;"
+            >
+              <p>Oops, something went very wrong.</p>
+
+              <button onClick={reset} type="button" class="clickable-text">
+                Retry
+              </button>
+            </div>
+          )}
+        >
+          <SearchRepoForm
+            onSubmit={props.closeModal}
+            onCancel={props.closeModal}
+          />
+        </ErrorBoundary>
+      </>
+    ),
+  ].filter((v) => v);
+
+  const currentStep = () => steps[stepIndex()];
+
   return (
     <div
       class="relative rounded-lg bg-gray-900 p-10 text-white"
       style="width: 480px;"
     >
-      <Switch>
-        <Match when={stepIndex() === 0}>
-          <div class="text-center">
-            <h3 class="text-2xl font-bold">{props.block.name}</h3>
-
-            <p class="text-gray-500">{props.block.description}</p>
-          </div>
-
-          <ChooseBlockTypeForm
-            onCancel={props.closeModal}
-            onSubmit={() => setStepIndex((stepIndex) => stepIndex + 1)}
-          />
-        </Match>
-
+      <Dynamic component={currentStep()} />
+      {/* <Switch>
         <Match when={stepIndex() === 1}>
-          <div class="text-center">
-            <h3 class="text-2xl font-bold">Select your repository</h3>
-
-            <p class="text-gray-500">
-              We will track the star from this repository
-            </p>
-          </div>
-
-          <ErrorBoundary
-            fallback={(error, reset) => (
-              <div
-                class="w-full flex flex-col justify-center items-center gap-4 font-semibold"
-                style="min-height: 120px;"
-              >
-                <p>Oops, something went very wrong.</p>
-
-                <button onClick={reset} type="button" class="clickable-text">
-                  Retry
-                </button>
-              </div>
-            )}
-          >
-            <SearchRepoForm
-              onSubmit={props.closeModal}
-              onCancel={props.closeModal}
-            />
-          </ErrorBoundary>
         </Match>
-      </Switch>
+      </Switch> */}
     </div>
   );
 };
 
 const ChooseBlockTypeForm: Component<{
+  availableBlockComponents?: Component[];
   onCancel: () => void;
   onSubmit: () => void;
 }> = (props) => {
+  props = mergeProps({ availableBlockComponents: [] }, props);
+
   const [current, setCurrent] = createSignal<number>(0);
 
-  const availableBlockComponents = () => [
-    blocks()[0].Component,
-    blocks()[1].Component,
-    blocks()[2].Component,
-  ];
-
-  const selectedBlockComponent = () => availableBlockComponents()[current()];
+  const selectedBlockComponent = () =>
+    props.availableBlockComponents[current()];
 
   const prev = () =>
     setCurrent((current) => (current > 0 ? current - 1 : current));
 
   const next = () =>
     setCurrent((current) =>
-      current < availableBlockComponents().length ? current + 1 : current
+      current < props.availableBlockComponents.length ? current + 1 : current
     );
 
-  hotkeys("left", (e) => {
-    e.preventDefault();
-    prev();
-  });
-
-  hotkeys("right", (e) => {
-    e.preventDefault();
-    next();
-  });
-
-  onCleanup(() => {
-    hotkeys.unbind("left");
-    hotkeys.unbind("right");
-  });
+  createHotkey("right", next);
+  createHotkey("left", prev);
 
   return (
     <form
@@ -232,7 +194,7 @@ const ChooseBlockTypeForm: Component<{
 
         <Stepper
           current={current()}
-          max={availableBlockComponents().length}
+          max={props.availableBlockComponents.length}
           onChange={(current) => setCurrent(current)}
         />
       </div>

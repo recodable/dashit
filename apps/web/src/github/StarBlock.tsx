@@ -5,14 +5,17 @@ import type { Props } from "./types";
 import { createRepoStats } from "./fetcher";
 
 const GithubStarBlock: Component<Props> = (props) => {
-  props = mergeProps({ user: "solidjs", repo: "solid" }, props);
+  props = mergeProps(
+    { user: "solidjs", repo: "solid", isPreview: false },
+    props
+  );
 
   const [data, actions] = createRepoStats(props);
 
   return (
     <SimpleMetricBlock
       title="Github Stars"
-      value={() => data().stargazers_count}
+      value={() => (props.isPreview ? 1234 : data().stargazers_count)}
       uow="stars"
       {...data}
       {...actions}

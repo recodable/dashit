@@ -10,7 +10,10 @@ type PullRequestData = {
 
 // TODO: implement caching for graphql query (not possible with fetch atm because graphql request are POST)
 const GithubOpenPullRequestBlock: Component<Props> = (props) => {
-  props = mergeProps({ user: "solidjs", repo: "solid" }, props);
+  props = mergeProps(
+    { user: "solidjs", repo: "solid", isPreview: false },
+    props
+  );
 
   const [data, actions] = createGithubGraphqlResource<PullRequestData>(`
     {
@@ -28,7 +31,9 @@ const GithubOpenPullRequestBlock: Component<Props> = (props) => {
   return (
     <SimpleMetricBlock
       title="Github PR"
-      value={() => data().data.repository.pullRequests.totalCount}
+      value={() =>
+        props.isPreview ? 1234 : data().data.repository.pullRequests.totalCount
+      }
       uow="open PR"
       {...data}
       {...actions}
