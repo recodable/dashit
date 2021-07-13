@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { mergeProps } from "solid-js";
+import { createResource, mergeProps } from "solid-js";
 import { SimpleMetricBlock } from "../blocks";
 import type { Props } from "./types";
 import { createGithubGraphqlResource } from "./fetcher";
@@ -15,7 +15,8 @@ const GithubOpenPullRequestBlock: Component<Props> = (props) => {
     props
   );
 
-  const [data, actions] = createGithubGraphqlResource<PullRequestData>(`
+  const [data, actions] = !props.isPreview
+    ? createGithubGraphqlResource<PullRequestData>(`
     {
       repository(
         owner: ${JSON.stringify(props.user)},
@@ -26,7 +27,10 @@ const GithubOpenPullRequestBlock: Component<Props> = (props) => {
         }
       }
     }
-  `);
+  `)
+    : createResource(() => ({
+        data: { repository: { pullRequests: { totalCount: 1234 } } },
+      }));
 
   return (
     <SimpleMetricBlock

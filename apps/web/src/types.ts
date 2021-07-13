@@ -9,4 +9,5 @@ export type Block = {
   name: string;
   description: string;
   Component: Component;
+  Setup?: Component;
 };

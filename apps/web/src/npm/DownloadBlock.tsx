@@ -20,7 +20,11 @@ export function createPackageResource({ name }: PackageParams) {
 export const NPMDownloadBlock: Component<Props> = (props) => {
   props = mergeProps({ name: "solid-js", isPreview: false }, props);
 
-  const [data, actions] = createPackageResource(props);
+  const [data, actions] = !props.isPreview
+    ? createPackageResource(props)
+    : createResource(() => ({
+        evaluation: { popularity: { downloadsCount: 1234 } },
+      }));
 
   return (
     <SimpleMetricBlock
