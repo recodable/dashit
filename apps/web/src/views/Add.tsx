@@ -15,16 +15,20 @@ import { useRouter } from "solid-app-router";
 
 const [blocks, setBlocks] = createSignal<Block[]>(registry);
 
+const needBlockSetup = (block: Block): boolean => !!block.setup;
+
 const CreateBlock: Component = () => {
   const [formData, setFormData] = createStore({ search: "" });
 
-  const [router] = useRouter();
+  const [router, { push }] = useRouter();
+
+  const dashboardUrl = `/${router.params.id}`;
 
   return (
     <div class="p-16 flex flex-col justify-center items-center">
       <div style="width: 768px;">
         <div class="my-12">
-          <Link href={`/${router.params.id}`} class="clickable-text mb-2">
+          <Link href={dashboardUrl} class="clickable-text mb-2">
             <ChevronLeft class="w-4 h-4" />
             <span>Back to dashboard</span>
           </Link>
@@ -60,9 +64,13 @@ const CreateBlock: Component = () => {
 
                 return (
                   <li
-                    onClick={() =>
-                      setModal({ Component: NewBlockModal, data: { block } })
-                    }
+                    onClick={() => {
+                      if (!needBlockSetup(block)) {
+                        return push(dashboardUrl);
+                      }
+
+                      setModal({ Component: NewBlockModal, data: { block } });
+                    }}
                     onMouseEnter={() => setHovered(true)}
                     onMouseLeave={() => setHovered(false)}
                     class="small-card"
@@ -90,44 +98,40 @@ export default CreateBlock;
 const NewBlockModal: Component<{ block: Block; closeModal: () => void }> = (
   props
 ) => {
-  props = mergeProps({ block: blocks()[1] }, props);
-
   const [stepIndex, setStepIndex] = createSignal(0);
 
   const steps = [
-    false
+    // false
+    //   ? () => (
+    //       <>
+    //         <div class="text-center">
+    //           <h3 class="text-2xl font-bold">{props.block.name}</h3>
+
+    //           <p class="text-gray-500">{props.block.description}</p>
+    //         </div>
+
+    //         <ChooseBlockTypeForm
+    //           onCancel={props.closeModal}
+    //           onSubmit={() => setStepIndex((stepIndex) => stepIndex + 1)}
+    //         />
+    //       </>
+    //     )
+    //   : null,
+
+    props.block.setup
       ? () => (
           <>
             <div class="text-center">
-              <h3 class="text-2xl font-bold">{props.block.name}</h3>
+              <h3 class="text-2xl font-bold">{props.block.setup.name}</h3>
 
-              <p class="text-gray-500">{props.block.description}</p>
-            </div>
-
-            <ChooseBlockTypeForm
-              onCancel={props.closeModal}
-              onSubmit={() => setStepIndex((stepIndex) => stepIndex + 1)}
-            />
-          </>
-        )
-      : null,
-
-    props.block.Setup
-      ? () => (
-          <>
-            <div class="text-center">
-              <h3 class="text-2xl font-bold">Select your repository</h3>
-
-              <p class="text-gray-500">
-                We will track the star from this repository
-              </p>
+              <p class="text-gray-500">{props.block.setup.description}</p>
             </div>
 
             <ErrorBoundary
               fallback={(error, reset) => (
                 <div
                   class="w-full flex flex-col justify-center items-center gap-4 font-semibold"
-                  style="min-height: 120px;"
+                  style="min-height: 240px;"
                 >
                   <p>Oops, something went very wrong.</p>
 
@@ -138,7 +142,7 @@ const NewBlockModal: Component<{ block: Block; closeModal: () => void }> = (
               )}
             >
               <Dynamic
-                component={props.block.Setup}
+                component={props.block.setup.Component}
                 onCancel={props.closeModal}
               />
             </ErrorBoundary>

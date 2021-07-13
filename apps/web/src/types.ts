@@ -5,9 +5,15 @@ export type Dashboard = {
   name: string;
 };
 
+export type BlockSetup = {
+  name: string;
+  description: string;
+  Component: Component;
+};
+
 export type Block = {
   name: string;
   description: string;
   Component: Component;
-  Setup?: Component;
+  setup?: BlockSetup;
 };
