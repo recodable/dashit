@@ -5,6 +5,10 @@ export type Dashboard = {
   name: string;
 };
 
+export interface DashboardWithBlocks extends Dashboard {
+  blocks: { settings: object; type: string }[];
+}
+
 export type BlockSetup = {
   name: string;
   description: string;
@@ -15,5 +19,6 @@ export type Block = {
   name: string;
   description: string;
   Component: Component;
+  type: string;
   setup?: BlockSetup;
 };

@@ -5,13 +5,10 @@ import type { Props } from "./types";
 import { createRepoStats } from "./fetcher";
 
 const GithubOpenIssueBlock: Component<Props> = (props) => {
-  props = mergeProps(
-    { user: "solidjs", repo: "solid", isPreview: false },
-    props
-  );
+  props = mergeProps({ isPreview: false }, props);
 
   const [data, actions] = !props.isPreview
-    ? createRepoStats(props)
+    ? createRepoStats(props.settings.repository)
     : createResource(() => ({ open_issues_count: 1234 }));
 
   return (

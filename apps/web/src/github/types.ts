@@ -1,7 +1,8 @@
+export type Repo = { id: number; full_name: string };
+
 export type Props = {
-  user?: string;
-  repo?: string;
+  settings: {
+    repository: Repo;
+  };
   isPreview?: boolean;
 };
-
-export type RepoParams = Props;

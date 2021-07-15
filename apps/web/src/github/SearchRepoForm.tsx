@@ -3,13 +3,13 @@ import { createSignal, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Show } from "solid-js/web";
 import SearchField from "../SearchField";
+import { Plus, Minus } from "../icons";
+import type { Repo } from "./types";
 
 const SearchRepoForm: Component<{
-  onSubmit: () => void;
+  onSubmit: ({ repository: Repo }) => void;
   onCancel: () => void;
 }> = (props) => {
-  type Repo = { id: number; full_name: string };
-
   const [formData, setFormData] = createStore<{
     search: string;
     selectedRepo: Repo;
@@ -22,9 +22,11 @@ const SearchRepoForm: Component<{
   const searchRepo = (search) => {
     if (search.length < 2) return Promise.resolve(null);
 
-    return fetch(`https://api.github.com/search/repositories?q=${search}`).then(
-      (response) => response.json()
-    );
+    return fetch(`https://api.github.com/search/repositories?q=${search}`, {
+      headers: {
+        Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`,
+      },
+    }).then((response) => response.json());
   };
 
   const [repositories] = createResource<{ items: Repo[] }, string>(
@@ -43,7 +45,7 @@ const SearchRepoForm: Component<{
     <form
       onSubmit={(e) => {
         e.preventDefault();
-        props.onSubmit();
+        props.onSubmit({ repository: selectedRepo() });
       }}
       class="flex flex-col gap-6 mt-6"
     >

@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { createSignal, mergeProps, createResource } from "solid-js";
+import { createSignal, mergeProps } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, Index, ErrorBoundary } from "solid-js/web";
 import { TransitionGroup } from "solid-transition-group";
@@ -7,7 +7,7 @@ import { setModal } from "@guillotin/solid";
 import SearchField from "../SearchField";
 // import debounce from "lodash.debounce";
 import { Link } from "solid-app-router";
-import { ChevronLeft, PlusCircle, Minus, Plus } from "../icons";
+import { ChevronLeft, PlusCircle } from "../icons";
 import createHotkey from "../hotkey";
 import registry from "../registry";
 import type { Block } from "../types";
@@ -95,9 +95,28 @@ const CreateBlock: Component = () => {
 
 export default CreateBlock;
 
+const createNewBlock = (
+  dashboardId: string | number,
+  block: Block,
+  blockSettings: object
+) => {
+  return fetch(
+    `${import.meta.env.VITE_API_URL}/dashboards/${dashboardId}/blocks`,
+    {
+      method: "POST",
+      body: JSON.stringify({
+        type: block.type,
+        settings: blockSettings,
+      }),
+    }
+  ).then((response) => response.json());
+};
+
 const NewBlockModal: Component<{ block: Block; closeModal: () => void }> = (
   props
 ) => {
+  const [router, { push }] = useRouter();
+
   const [stepIndex, setStepIndex] = createSignal(0);
 
   const steps = [
@@ -141,9 +160,19 @@ const NewBlockModal: Component<{ block: Block; closeModal: () => void }> = (
                 </div>
               )}
             >
-              <Dynamic
+              <Dynamic<{ onCancel: () => void; onSubmit: (data: any) => void }>
                 component={props.block.setup.Component}
                 onCancel={props.closeModal}
+                onSubmit={async (settings) => {
+                  await createNewBlock(
+                    router.params.id as string,
+                    props.block,
+                    settings
+                  );
+
+                  props.closeModal();
+                  push(`/${router.params.id}`);
+                }}
               />
             </ErrorBoundary>
           </>

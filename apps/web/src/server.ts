@@ -69,15 +69,25 @@ createServer(async (req, res) => {
       }
 
       if ((matches = pattern.match(/^GET \/dashboards\/(.+)$/))) {
-        return res.end(
-          JSON.stringify(
-            await db
-              .select("*")
-              .from("dashboards")
-              .where({ id: matches[1] })
-              .first()
-          )
-        );
+        try {
+          const dashboard = await db
+            .select("*")
+            .from("dashboards")
+            .where({ "dashboards.id": matches[1] })
+            .first();
+
+          const dashboardBlocks = await db
+            .select("*")
+            .from("blocks")
+            .where({ dashboard_id: dashboard.id });
+
+          return res.end(
+            JSON.stringify({ ...dashboard, blocks: dashboardBlocks })
+          );
+        } catch (err) {
+          res.writeHead(404);
+          return res.end("Not Found");
+        }
       }
 
       if ((matches = pattern.match(/^PUT \/dashboards\/(.+)$/))) {
@@ -90,6 +100,22 @@ createServer(async (req, res) => {
           .returning("*");
 
         return res.end(JSON.stringify(updatedDashboard));
+      }
+
+      if ((matches = pattern.match(/^POST \/dashboards\/(.+)\/blocks/))) {
+        const { type, settings } = body;
+        const [newBlock] = await db
+          .insert({
+            type,
+            settings: JSON.stringify({
+              repository: { full_name: settings.repository.full_name },
+            }),
+            dashboard_id: matches[1],
+          })
+          .into("blocks")
+          .returning("*");
+
+        return res.end(JSON.stringify(newBlock));
       }
 
       res.writeHead(404);

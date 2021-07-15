@@ -11,7 +11,7 @@
     "knex": "TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' knex",
     "make:migration": "knex migrate:make -x ts",
     "db:migrate": "knex migrate:latest",
-    "db:fresh": "knex migrate:rollback --all && knex migrate:up"
+    "db:fresh": "knex migrate:rollback --all && knex migrate:latest"
   },
   "devDependencies": {
     "@types/node": "^16.3.1",

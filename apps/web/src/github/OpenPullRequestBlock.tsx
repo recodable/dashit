@@ -10,17 +10,18 @@ type PullRequestData = {
 
 // TODO: implement caching for graphql query (not possible with fetch atm because graphql request are POST)
 const GithubOpenPullRequestBlock: Component<Props> = (props) => {
-  props = mergeProps(
-    { user: "solidjs", repo: "solid", isPreview: false },
-    props
-  );
+  props = mergeProps({ repo: { full_name: "" }, isPreview: false }, props);
+
+  const [userName, repoName] = !props.isPreview
+    ? props.settings.repository.full_name.split("/")
+    : ["solidjs", "solid"];
 
   const [data, actions] = !props.isPreview
     ? createGithubGraphqlResource<PullRequestData>(`
     {
       repository(
-        owner: ${JSON.stringify(props.user)},
-        name: ${JSON.stringify(props.repo)}
+        owner: ${JSON.stringify(userName)},
+        name: ${JSON.stringify(repoName)}
       ) {
         pullRequests(states: OPEN) {
           totalCount

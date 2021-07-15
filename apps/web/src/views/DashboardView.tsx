@@ -6,7 +6,7 @@ import { NPMDownloadBlock } from "../npm/DownloadBlock";
 import { Transition } from "solid-transition-group";
 import { Link } from "solid-app-router";
 import { ExclamationCicle, Loading, Plus } from "../icons";
-import type { Dashboard } from "../types";
+import type { Dashboard, DashboardWithBlocks } from "../types";
 import { useRouter } from "solid-app-router";
 import type { Store, SetStoreFunction } from "solid-js/store";
 import { createRenderEffect } from "solid-js";
@@ -32,15 +32,16 @@ export function model<T>(el, value: () => Model<T>) {
 }
 
 const DashboardView: Component = () => {
-  const [blocks, setBlocks] = createSignal([
-    lazy(() => import("../github/StarBlock")),
-    lazy(() => import("../github/OpenIssueBlock")),
-    lazy(() => import("../github/OpenPullRequestBlock")),
-  ]);
+  // const test = "github/StarBlock";
+  // const [blocks, setBlocks] = createSignal([
+  //   lazy(() => import(`../${test}.tsx`)),
+  //   // lazy(() => import("../github/OpenIssueBlock")),
+  //   // lazy(() => import("../github/OpenPullRequestBlock")),
+  // ]);
 
   const [router] = useRouter();
 
-  const [dashboard, { mutate }] = createResource<Dashboard>(() => {
+  const [dashboard, { mutate }] = createResource<DashboardWithBlocks>(() => {
     return fetch(
       `${import.meta.env.VITE_API_URL}/dashboards/${router.params.id}`
     ).then((response) => response.json());
@@ -69,8 +70,9 @@ const DashboardView: Component = () => {
           </div>
 
           <ul class="grid grid-cols-3 gap-4 py-6">
-            <For each={blocks()}>
-              {(Block) => {
+            <For each={dashboard().blocks}>
+              {(block) => {
+                console.log(block);
                 const [hovered, setHovered] = createSignal(false);
                 const [open, setOpen] = createSignal(false);
                 const focused = () => hovered() || open();
@@ -83,6 +85,7 @@ const DashboardView: Component = () => {
                   >
                     <ErrorBoundary
                       fallback={(error, reset) => {
+                        console.log(error);
                         return (
                           <div
                             onClick={reset}
@@ -123,7 +126,10 @@ const DashboardView: Component = () => {
                       </Transition>
 
                       <Suspense>
-                        <Dynamic component={Block} />
+                        <Dynamic<{ settings: any }>
+                          component={lazy(() => import(`../${block.type}.tsx`))}
+                          settings={block.settings}
+                        />
                       </Suspense>
                     </ErrorBoundary>
                   </li>
