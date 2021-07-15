@@ -23,7 +23,7 @@ export const SimpleMetricBlock: Component<{
           <div class="flex gap-4 items-baseline mb-3">
             <h3 class="text-2xl font-thin text-gray-400">{props.title}</h3>
 
-            <ul>
+            <ul class="flex gap-1">
               <For each={props.badges || []}>
                 {(badge) => (
                   <li class="px-1 text-xs font-mono bg-blue-800 text-blue-400 rounded">
