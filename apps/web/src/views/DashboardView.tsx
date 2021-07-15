@@ -1,8 +1,7 @@
 import type { Component } from "solid-js";
-import { createSignal, lazy, createResource, createEffect } from "solid-js";
+import { createSignal, lazy, createResource } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
-import { NPMDownloadBlock } from "../npm/DownloadBlock";
 import { Transition } from "solid-transition-group";
 import { Link } from "solid-app-router";
 import { ExclamationCicle, Loading, Plus } from "../icons";

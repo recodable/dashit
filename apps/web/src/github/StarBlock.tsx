@@ -11,11 +11,14 @@ const GithubStarBlock: Component<Props> = (props) => {
     ? createRepoStats(props.settings.repository)
     : createResource(() => ({ stargazers_count: 1234 }));
 
+  const badges = !props.isPreview ? [props.settings.repository.full_name] : [];
+
   return (
     <SimpleMetricBlock
       title="Github Stars"
       value={() => data().stargazers_count}
       uow="stars"
+      badges={badges}
       {...data}
       {...actions}
     />

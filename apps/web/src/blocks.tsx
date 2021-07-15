@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { Switch, Match } from "solid-js/web";
+import { Switch, Match, For } from "solid-js/web";
 import { Loading } from "./icons";
 
 export const SimpleMetricBlock: Component<{
@@ -8,6 +8,7 @@ export const SimpleMetricBlock: Component<{
   value: () => number;
   uow: string;
   refetch: () => void;
+  badges?: string[];
 }> = (props) => {
   return (
     <Switch>
@@ -19,7 +20,19 @@ export const SimpleMetricBlock: Component<{
 
       <Match when={!props.loading}>
         <div onClick={props.refetch}>
-          <h4 class="text-lg font-thin text-gray-400 mb-3">{props.title}</h4>
+          <div class="flex gap-2 items-center mb-3">
+            <h4 class="text-lg font-thin text-gray-400">{props.title}</h4>
+
+            <ul>
+              <For each={props.badges || []}>
+                {(badge) => (
+                  <li class="px-1 py-0.5 text-xs font-mono bg-blue-800 text-blue-400 rounded">
+                    {badge}
+                  </li>
+                )}
+              </For>
+            </ul>
+          </div>
 
           <div class="flex gap-2 items-baseline">
             <span>
