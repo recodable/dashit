@@ -1,17 +1,10 @@
 import type { Component } from "solid-js";
-import { createResource, mergeProps } from "solid-js";
+import { mergeProps } from "solid-js";
 import { Show } from "solid-js/web";
 import { SimpleMetricBlock } from "../blocks";
 import type { Props } from "./types";
 import { createGithubGraphqlResource } from "./fetcher";
-import {
-  isAfter,
-  startOfDay,
-  startOfMonth,
-  startOfWeek,
-  startOfYear,
-  sub,
-} from "date-fns";
+import { isAfter, sub } from "date-fns";
 
 const GithubStarBlock: Component<Props> = (props) => {
   props = mergeProps({ isPreview: false }, props);
@@ -49,6 +42,7 @@ const GithubStarBlockWithData = (props) => {
       repository: {
         stargazers: {
           edges: { cursor: string; starredAt: string }[];
+          totalCount: number;
         };
       };
     };
@@ -71,14 +65,20 @@ const GithubStarBlockWithData = (props) => {
   return (
     <SimpleMetricBlock
       title="Github Stars"
-      value={() =>
-        data().data.repository.stargazers.edges.filter(({ starredAt }) => {
-          return isAfter(
-            new Date(starredAt),
-            sub(new Date(), { days: props.period })
-          );
-        }).length
-      }
+      value={() => {
+        if (!isFinite(props.period)) {
+          return data().data.repository.stargazers.totalCount;
+        }
+
+        return data().data.repository.stargazers.edges.filter(
+          ({ starredAt }) => {
+            return isAfter(
+              new Date(starredAt),
+              sub(new Date(), { days: props.period })
+            );
+          }
+        ).length;
+      }}
       uow="stars"
       badges={[props.settings.repository.full_name]}
       {...data}

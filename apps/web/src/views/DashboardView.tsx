@@ -84,7 +84,6 @@ const DashboardView: Component = () => {
                   >
                     <ErrorBoundary
                       fallback={(error, reset) => {
-                        console.log(error);
                         return (
                           <div
                             onClick={reset}
@@ -113,6 +112,8 @@ const DashboardView: Component = () => {
                               class="bg-gray-600 text-gray-400 cursor-pointer"
                               onFocusIn={() => setOpen(true)}
                               onFocusOut={() => setOpen(false)}
+                              value={period()}
+                              onChange={(e) => setPeriod(e.target.value)}
                             >
                               <option value={1}>Today</option>
                               <option value={7}>This week</option>
