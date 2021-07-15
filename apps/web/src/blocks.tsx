@@ -20,13 +20,13 @@ export const SimpleMetricBlock: Component<{
 
       <Match when={!props.loading}>
         <div onClick={props.refetch}>
-          <div class="flex gap-2 items-center mb-3">
-            <h4 class="text-lg font-thin text-gray-400">{props.title}</h4>
+          <div class="flex gap-4 items-baseline mb-3">
+            <h3 class="text-2xl font-thin text-gray-400">{props.title}</h3>
 
             <ul>
               <For each={props.badges || []}>
                 {(badge) => (
-                  <li class="px-1 py-0.5 text-xs font-mono bg-blue-800 text-blue-400 rounded">
+                  <li class="px-1 text-xs font-mono bg-blue-800 text-blue-400 rounded">
                     {badge}
                   </li>
                 )}
