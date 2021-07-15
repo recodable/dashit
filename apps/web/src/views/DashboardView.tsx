@@ -144,7 +144,7 @@ const DashboardView: Component = () => {
 
 export default DashboardView;
 
-const Test = () => {
+const UpdatingNotification = () => {
   return (
     <div
       class="px-4 py-2 shadow-xl bg-gray-500 rounded-lg flex gap-2 items-center"
@@ -156,7 +156,7 @@ const Test = () => {
   );
 };
 
-const Success = () => {
+const SuccessfullyUpdatedNotification = () => {
   return (
     <div
       class="px-4 py-2 shadow-xl bg-green-500 rounded-lg flex gap-2 items-center"
@@ -178,7 +178,7 @@ const EditableTitle: Component<{
   createHotkey("escape", () => setEdit(false));
 
   const update = async () => {
-    const notification = addNotification(Test, {});
+    const notification = addNotification(UpdatingNotification, {});
 
     const updatedDashboard = await fetch(
       `${import.meta.env.VITE_API_URL}/dashboards/${props.dashboard.id}`,
@@ -192,9 +192,7 @@ const EditableTitle: Component<{
 
     await new Promise((resolve) => setTimeout(resolve, 500));
     dismissNotification(notification);
-    addNotification(Success);
-
-    setEdit(false);
+    addNotification(SuccessfullyUpdatedNotification);
   };
 
   return (
@@ -211,7 +209,12 @@ const EditableTitle: Component<{
         <input
           name="name"
           type="text"
-          onFocusOut={update}
+          onFocusOut={async () => {
+            if (formData.name !== props.dashboard.name) {
+              await update();
+            }
+            setEdit(false);
+          }}
           use:model={[formData, setFormData]}
           // TODO: autofocus
           class="bg-gray-700 text-4xl font-extrabold px-1 py-0.5 rounded-lg"
