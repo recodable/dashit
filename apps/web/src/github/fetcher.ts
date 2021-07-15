@@ -1,15 +1,11 @@
 import { createResource } from "solid-js";
-import type { Repo } from "./types";
 
-export function createRepoStats({ full_name }: Repo) {
-  return createResource<{
-    stargazers_count: number;
-    open_issues_count: number;
-  }>(() => {
-    const url = `https://api.github.com/repos/${full_name}`;
-    return fetch(url, {
+export function createGithubRESTResource<T>(url: string, headers: object = {}) {
+  return createResource<T>(() => {
+    return fetch(`https://api.github.com/${url}`, {
       headers: {
         Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`,
+        ...headers,
       },
     }).then((response) => response.json());
   });

@@ -11,6 +11,7 @@ importers:
       '@types/node': ^16.3.1
       autoprefixer: ^10.2.6
       concurrently: ^6.2.0
+      date-fns: ^2.22.1
       dotenv: ^10.0.0
       fetch-intercept: ^2.4.0
       hotkeys-js: ^3.8.7
@@ -30,6 +31,7 @@ importers:
       whatwg-fetch: ^3.6.2
     dependencies:
       '@guillotin/solid': link:../../../guillotin/packages/solid
+      date-fns: 2.22.1
       fetch-intercept: 2.4.0
       hotkeys-js: 3.8.7
       knex: 0.95.7_pg@8.6.0
@@ -799,7 +801,6 @@ packages:
   /date-fns/2.22.1:
     resolution: {integrity: sha512-yUFPQjrxEmIsMqlHhAhmxkuH769baF21Kk+nZwZGyrMoyLA+LugaQtC0+Tqf9CBUUULWwUJt6Q5ySI3LJDDCGg==}
     engines: {node: '>=0.11'}
-    dev: true
 
   /debug/2.6.9:
     resolution: {integrity: sha512-bC7ElrdJaJnPbAP+1EotYvqZsb3ecl5wi6Bfi6BJTUcNowp6cvspg0jXznRTKDjm/E7AdgFBVeAPVMNcKGsHMA==}

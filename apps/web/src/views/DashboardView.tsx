@@ -74,6 +74,7 @@ const DashboardView: Component = () => {
                 const [hovered, setHovered] = createSignal(false);
                 const [open, setOpen] = createSignal(false);
                 const focused = () => hovered() || open();
+                const [period, setPeriod] = createSignal(1);
 
                 return (
                   <li
@@ -113,20 +114,21 @@ const DashboardView: Component = () => {
                               onFocusIn={() => setOpen(true)}
                               onFocusOut={() => setOpen(false)}
                             >
-                              <option value="">All time</option>
-                              <option value="today">Today</option>
-                              <option value="week">This week</option>
-                              <option value="month">This month</option>
-                              <option value="year">This year</option>
+                              <option value={1}>Today</option>
+                              <option value={7}>This week</option>
+                              <option value={31}>This month</option>
+                              <option value={365}>This year</option>
+                              <option value={Infinity}>All time</option>
                             </select>
                           </div>
                         </Show>
                       </Transition>
 
                       <Suspense>
-                        <Dynamic<{ settings: any }>
+                        <Dynamic<{ settings: any; period: number }>
                           component={lazy(() => import(`../${block.type}.tsx`))}
                           settings={block.settings}
+                          period={period()}
                         />
                       </Suspense>
                     </ErrorBoundary>

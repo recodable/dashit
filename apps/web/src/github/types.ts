@@ -4,5 +4,6 @@ export type Props = {
   settings: {
     repository: Repo;
   };
+  period: number; // in days
   isPreview?: boolean;
 };
