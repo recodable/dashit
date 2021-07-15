@@ -11,6 +11,7 @@ importers:
       '@types/node': ^16.3.1
       autoprefixer: ^10.2.6
       concurrently: ^6.2.0
+      dotenv: ^10.0.0
       fetch-intercept: ^2.4.0
       hotkeys-js: ^3.8.7
       knex: ^0.95.7
@@ -44,6 +45,7 @@ importers:
       '@types/node': 16.3.1
       autoprefixer: 10.2.6_postcss@8.3.5
       concurrently: 6.2.0
+      dotenv: 10.0.0
       nodemon: 2.0.12
       postcss: 8.3.5
       tailwindcss: 2.2.4_ad3b28f69b9573a9fd93ed3f6e22d121
@@ -870,6 +872,11 @@ packages:
     engines: {node: '>=8'}
     dependencies:
       is-obj: 2.0.0
+    dev: true
+
+  /dotenv/10.0.0:
+    resolution: {integrity: sha512-rlBi9d8jpv9Sf1klPjNfFAuWDjKLwTIJJ/VxtoTwIR6hnZxcEOQCZg2oIL3MWBYw5GpUDKOEnND7LXTbIpQ03Q==}
+    engines: {node: '>=10'}
     dev: true
 
   /duplexer3/0.1.4:

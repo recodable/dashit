@@ -1,14 +1,18 @@
 import { createServer } from "http";
 import knex from "knex";
+import dotenv from "dotenv";
+import { join } from "path";
+
+dotenv.config({ path: join(process.cwd(), ".env.local") });
 
 const db = knex({
   client: "pg",
   connection: {
-    host: "localhost",
-    port: 5432,
-    user: "postgres",
-    password: "password",
-    database: "jumpdash",
+    host: process.env.DB_HOST,
+    port: parseInt(process.env.DB_PORT),
+    user: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME,
   },
 });
 
