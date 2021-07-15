@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { createSignal, lazy, createResource } from "solid-js";
+import { createSignal, lazy, createResource, onMount } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
 import { Transition } from "solid-transition-group";
@@ -71,7 +71,6 @@ const DashboardView: Component = () => {
           <ul class="grid grid-cols-3 gap-4 py-6">
             <For each={dashboard().blocks}>
               {(block) => {
-                console.log(block);
                 const [hovered, setHovered] = createSignal(false);
                 const [open, setOpen] = createSignal(false);
                 const focused = () => hovered() || open();
@@ -175,8 +174,6 @@ const EditableTitle: Component<{
   const [edit, setEdit] = createSignal(false);
   const [formData, setFormData] = createStore({ name: props.dashboard.name });
 
-  createHotkey("escape", () => setEdit(false));
-
   const update = async () => {
     const notification = addNotification(UpdatingNotification, {});
 
@@ -206,19 +203,39 @@ const EditableTitle: Component<{
       </Show>
 
       <Show when={edit()}>
-        <input
-          name="name"
-          type="text"
-          onFocusOut={async () => {
+        {() => {
+          let input;
+
+          const submit = async () => {
             if (formData.name !== props.dashboard.name) {
               await update();
             }
             setEdit(false);
-          }}
-          use:model={[formData, setFormData]}
-          // TODO: autofocus
-          class="bg-gray-700 text-4xl font-extrabold px-1 py-0.5 rounded-lg"
-        />
+          };
+
+          const cancel = () => {
+            setFormData({ name: props.dashboard.name });
+            setEdit(false);
+          };
+
+          createHotkey("enter", submit);
+          createHotkey("escape", cancel);
+
+          onMount(() => {
+            input.focus();
+          });
+
+          return (
+            <input
+              ref={input}
+              name="name"
+              type="text"
+              onFocusOut={submit}
+              use:model={[formData, setFormData]}
+              class="bg-gray-700 text-4xl font-extrabold px-1 py-0.5 rounded-lg"
+            />
+          );
+        }}
       </Show>
     </>
   );
