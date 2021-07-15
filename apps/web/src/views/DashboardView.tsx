@@ -125,7 +125,10 @@ const DashboardView: Component = () => {
                       </Transition>
 
                       <Suspense>
-                        <Dynamic<{ settings: any; period: number }>
+                        <Dynamic<{
+                          settings: any;
+                          period: number;
+                        }>
                           component={lazy(() => import(`../${block.type}.tsx`))}
                           settings={block.settings}
                           period={period()}

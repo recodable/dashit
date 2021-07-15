@@ -81,7 +81,10 @@ const CreateBlock: Component = () => {
                       </div>
                     </Show>
 
-                    <Dynamic component={block.Component} isPreview />
+                    <Dynamic<{ isPreview: boolean }>
+                      component={block.Component}
+                      isPreview
+                    />
                   </li>
                 );
               }}

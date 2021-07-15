@@ -10,6 +10,7 @@ import {
   startOfMonth,
   startOfWeek,
   startOfYear,
+  sub,
 } from "date-fns";
 
 const GithubStarBlock: Component<Props> = (props) => {
@@ -27,60 +28,61 @@ const GithubStarBlock: Component<Props> = (props) => {
           refetch={() => null}
         />
       </Show>
+
       <Show when={!props.isPreview}>
-        {() => {
-          const [owner, name] = props.settings.repository.full_name.split("/");
-
-          const [data, actions] = createGithubGraphqlResource<{
-            data: {
-              repository: {
-                stargazers: {
-                  edges: { cursor: string; starredAt: string }[];
-                };
-              };
-            };
-          }>(`
-            {
-              repository(owner: ${JSON.stringify(
-                owner
-              )}, name: ${JSON.stringify(name)}) {
-                stargazers(orderBy: {field: STARRED_AT, direction: DESC}, first: 100) {
-                  edges {
-                    cursor
-                    starredAt
-                  }
-                  totalCount
-                }
-              }
-            }
-          `);
-
-          return (
-            <SimpleMetricBlock
-              title="Github Stars"
-              value={() =>
-                data().data.repository.stargazers.edges.filter(
-                  ({ starredAt }) => {
-                    return isAfter(
-                      new Date(starredAt),
-                      startOfYear(new Date())
-                    );
-                    // return isAfter(new Date(starredAt), startOfMonth(new Date()));
-                    // return isAfter(new Date(starredAt), startOfDay(new Date()));
-                    // return isAfter(new Date(starredAt), startOfWeek(new Date()));
-                  }
-                ).length
-              }
-              uow="stars"
-              badges={[props.settings.repository.full_name]}
-              {...data}
-              {...actions}
-            />
-          );
-        }}
+        <GithubStarBlockWithData
+          settings={props.settings}
+          period={props.period}
+        />
       </Show>
     </>
   );
 };
 
 export default GithubStarBlock;
+
+const GithubStarBlockWithData = (props) => {
+  const [owner, name] = props.settings.repository.full_name.split("/");
+
+  const [data, actions] = createGithubGraphqlResource<{
+    data: {
+      repository: {
+        stargazers: {
+          edges: { cursor: string; starredAt: string }[];
+        };
+      };
+    };
+  }>(`
+    {
+      repository(owner: ${JSON.stringify(owner)}, name: ${JSON.stringify(
+    name
+  )}) {
+        stargazers(orderBy: {field: STARRED_AT, direction: DESC}, first: 100) {
+          edges {
+            cursor
+            starredAt
+          }
+          totalCount
+        }
+      }
+    }
+  `);
+
+  return (
+    <SimpleMetricBlock
+      title="Github Stars"
+      value={() =>
+        data().data.repository.stargazers.edges.filter(({ starredAt }) => {
+          return isAfter(
+            new Date(starredAt),
+            sub(new Date(), { days: props.period })
+          );
+        }).length
+      }
+      uow="stars"
+      badges={[props.settings.repository.full_name]}
+      {...data}
+      {...actions}
+    />
+  );
+};

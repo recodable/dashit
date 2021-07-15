@@ -21,27 +21,9 @@ const GithubOpenIssueBlock: Component<Props> = (props) => {
       </Show>
 
       <Show when={!props.isPreview}>
-        {() => {
-          const [data, actions] = createGithubRESTResource<{
-            open_issues_count: number;
-          }>(`repos/${props.settings.repository}`);
-
-          return (
-            <SimpleMetricBlock
-              title="Github Issues"
-              value={() => data().open_issues_count}
-              uow="open issues"
-              {...data}
-              {...actions}
-            />
-          );
-        }}
-        <SimpleMetricBlock
-          title="Github Issues"
-          value={() => 123}
-          uow="open issues"
-          loading={false}
-          refetch={() => null}
+        <GithubOpenIssueBlockWithData
+          settings={props.settings}
+          period={props.period}
         />
       </Show>
     </>
@@ -49,3 +31,19 @@ const GithubOpenIssueBlock: Component<Props> = (props) => {
 };
 
 export default GithubOpenIssueBlock;
+
+const GithubOpenIssueBlockWithData: Component<Props> = (props) => {
+  const [data, actions] = createGithubRESTResource<{
+    open_issues_count: number;
+  }>(`repos/${props.settings.repository}`);
+
+  return (
+    <SimpleMetricBlock
+      title="Github Issues"
+      value={() => data().open_issues_count}
+      uow="open issues"
+      {...data}
+      {...actions}
+    />
+  );
+};
