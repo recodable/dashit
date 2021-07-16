@@ -26,6 +26,7 @@
   },
   "dependencies": {
     "@guillotin/solid": "link:../../../guillotin/packages/solid",
+    "@rturnq/solid-auth0": "link:../../../solid-auth0",
     "date-fns": "^2.22.1",
     "fetch-intercept": "^2.4.0",
     "hotkeys-js": "^3.8.7",
