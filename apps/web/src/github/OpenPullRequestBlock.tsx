@@ -17,18 +17,20 @@ const GithubOpenPullRequestBlock: Component<Props> = (props) => {
     : ["solidjs", "solid"];
 
   const [data, actions] = !props.isPreview
-    ? createGithubGraphqlResource<PullRequestData>(`
-    {
-      repository(
-        owner: ${JSON.stringify(userName)},
-        name: ${JSON.stringify(repoName)}
-      ) {
-        pullRequests(states: OPEN) {
-          totalCount
-        }
-      }
-    }
-  `)
+    ? createGithubGraphqlResource<PullRequestData>(() => [
+        () => `
+          {
+            repository(
+              owner: ${JSON.stringify(userName)},
+              name: ${JSON.stringify(repoName)}
+            ) {
+              pullRequests(states: OPEN) {
+                totalCount
+              }
+            }
+          }
+        `,
+      ])
     : createResource(() => ({
         data: { repository: { pullRequests: { totalCount: 1234 } } },
       }));

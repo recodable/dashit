@@ -100,7 +100,6 @@ const DashboardView: Component = () => {
                   >
                     <ErrorBoundary
                       fallback={(error, reset) => {
-                        console.log(error);
                         return (
                           <div
                             onClick={reset}

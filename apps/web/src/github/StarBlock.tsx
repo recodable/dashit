@@ -4,7 +4,7 @@ import { Show } from "solid-js/web";
 import { SimpleMetricBlock } from "../blocks";
 import type { Props } from "./types";
 import { createGithubGraphqlResource } from "./fetcher";
-import { isAfter, sub } from "date-fns";
+import { isAfter, isBefore, sub } from "date-fns";
 
 const GithubStarBlock: Component<Props> = (props) => {
   props = mergeProps({ isPreview: false }, props);
@@ -46,21 +46,59 @@ const GithubStarBlockWithData = (props) => {
         };
       };
     };
-  }>(`
-    {
-      repository(owner: ${JSON.stringify(owner)}, name: ${JSON.stringify(
-    name
-  )}) {
-        stargazers(orderBy: {field: STARRED_AT, direction: DESC}, first: 100) {
-          edges {
-            cursor
-            starredAt
+  }>(() => {
+    return [
+      ({ afterCursor = null }: { afterCursor?: string }) => `
+        {
+          repository(
+            owner: ${JSON.stringify(owner)},
+            name: ${JSON.stringify(name)}
+          ) {
+            stargazers(
+              ${afterCursor ? `after: "${afterCursor}",` : ""}
+              orderBy: {field: STARRED_AT, direction: DESC},
+              first: 100
+            ) {
+              edges {
+                cursor
+                starredAt
+              }
+              totalCount
+            }
           }
-          totalCount
         }
-      }
-    }
-  `);
+      `,
+      {
+        afterCursor: (data) => {
+          if (!data) return null;
+          const { edges } = data.data.repository.stargazers;
+          return edges[edges.length - 1].cursor;
+        },
+
+        needNextPage: (data) => {
+          const { edges } = data.data.repository.stargazers;
+
+          return (
+            data.data.repository.stargazers.totalCount !==
+              data.data.repository.stargazers.edges.length &&
+            isAfter(
+              new Date(edges[edges.length - 1].starredAt),
+              sub(new Date(), { days: props.period * 2 })
+            )
+          );
+        },
+
+        merge: (oldData, newData) => {
+          newData.data.repository.stargazers.edges = [
+            ...oldData.data.repository.stargazers.edges,
+            ...newData.data.repository.stargazers.edges,
+          ];
+
+          return newData;
+        },
+      },
+    ];
+  });
 
   const value = () => {
     if (!isFinite(props.period)) {
@@ -77,9 +115,12 @@ const GithubStarBlockWithData = (props) => {
 
   const previousValue = () => {
     return data().data.repository.stargazers.edges.filter(({ starredAt }) => {
-      return isAfter(
-        new Date(starredAt),
-        sub(new Date(), { days: props.period * 2 })
+      return (
+        isAfter(
+          new Date(starredAt),
+          sub(new Date(), { days: props.period * 2 })
+        ) &&
+        isBefore(new Date(starredAt), sub(new Date(), { days: props.period }))
       );
     }).length;
   };
