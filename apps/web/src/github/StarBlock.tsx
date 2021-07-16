@@ -75,6 +75,15 @@ const GithubStarBlockWithData = (props) => {
     }).length;
   };
 
+  const previousValue = () => {
+    return data().data.repository.stargazers.edges.filter(({ starredAt }) => {
+      return isAfter(
+        new Date(starredAt),
+        sub(new Date(), { days: props.period * 2 })
+      );
+    }).length;
+  };
+
   return (
     <SimpleMetricBlock
       title="Github Stars"
@@ -85,9 +94,11 @@ const GithubStarBlockWithData = (props) => {
         isFinite(props.period)
           ? {
               value: () => {
-                return Math.ceil(
-                  (value() * 100) / data().data.repository.stargazers.totalCount
+                const result = Math.round(
+                  ((value() - previousValue()) * 100) / previousValue()
                 );
+
+                return !isNaN(result) ? result : 0;
               },
               uow: "%",
             }

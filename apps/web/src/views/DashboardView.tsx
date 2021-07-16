@@ -90,7 +90,7 @@ const DashboardView: Component = () => {
                 const [hovered, setHovered] = createSignal(false);
                 const [open, setOpen] = createSignal(false);
                 const focused = () => hovered() || open();
-                const [period, setPeriod] = createSignal(1);
+                const [period, setPeriod] = createSignal(30);
 
                 return (
                   <li
@@ -100,6 +100,7 @@ const DashboardView: Component = () => {
                   >
                     <ErrorBoundary
                       fallback={(error, reset) => {
+                        console.log(error);
                         return (
                           <div
                             onClick={reset}
@@ -131,10 +132,10 @@ const DashboardView: Component = () => {
                               value={period()}
                               onChange={(e) => setPeriod(e.target.value)}
                             >
-                              <option value={1}>Today</option>
-                              <option value={7}>This week</option>
-                              <option value={31}>This month</option>
-                              <option value={365}>This year</option>
+                              <option value={1}>Last 24h</option>
+                              <option value={7}>Last 7 days</option>
+                              <option value={30}>Last 30 days</option>
+                              {/* <option value={365}>This year</option> */}
                               <option value={Infinity}>All time</option>
                             </select>
                           </div>

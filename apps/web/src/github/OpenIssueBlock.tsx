@@ -17,6 +17,7 @@ const GithubOpenIssueBlock: Component<Props> = (props) => {
           uow="open issues"
           loading={false}
           refetch={() => null}
+          badges={["your/repo"]}
         />
       </Show>
 

@@ -26,7 +26,7 @@ const CreateBlock: Component = () => {
 
   return (
     <div class="p-16 flex flex-col justify-center items-center">
-      <div style="width: 768px;">
+      <div style="width: 1024px;">
         <div class="my-12">
           <Link href={dashboardUrl} class="clickable-text mb-2">
             <ChevronLeft class="w-4 h-4" />

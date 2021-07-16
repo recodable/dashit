@@ -1,8 +1,8 @@
 import type { Component } from "solid-js";
 import { Switch, Match, For, Show } from "solid-js/web";
-import { Loading } from "./icons";
+import { Loading, UpTrend, DownTrend } from "../icons";
 
-export const SimpleMetricBlock: Component<{
+const SimpleMetricBlock: Component<{
   loading: boolean;
   title: string;
   value: () => number;
@@ -52,27 +52,7 @@ export const SimpleMetricBlock: Component<{
 
             <div>
               <Show when={props.trend}>
-                <div class="flex items-baseline gap-1">
-                  <svg
-                    xmlns="http://www.w3.org/2000/svg"
-                    class="h-3 w-3 text-green-500"
-                    fill="none"
-                    viewBox="0 0 24 24"
-                    stroke="currentColor"
-                  >
-                    <path
-                      stroke-linecap="round"
-                      stroke-linejoin="round"
-                      stroke-width="2"
-                      d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"
-                    />
-                  </svg>
-
-                  <span class="text-green-500 text-sm font-mono">
-                    <span>{props.trend.value()}</span>
-                    <span>{props.trend.uow}</span>
-                  </span>
-                </div>
+                <Trend value={props.trend.value()} uow={props.trend.uow} />
               </Show>
 
               <span class="font-mono">{props.uow}</span>
@@ -81,5 +61,40 @@ export const SimpleMetricBlock: Component<{
         </div>
       </Match>
     </Switch>
+  );
+};
+
+export default SimpleMetricBlock;
+
+const Trend: Component<{ value: number; uow: string }> = (props) => {
+  return (
+    <div class="flex items-baseline gap-1">
+      <Switch
+        fallback={() => (
+          <span class="text-xl text-yellow-500 leading-none">=</span>
+        )}
+      >
+        <Match when={props.value > 0}>
+          <UpTrend class="h-3 w-3 text-green-500" />
+        </Match>
+
+        <Match when={props.value < 0}>
+          <DownTrend class="h-3 w-3 text-red-500" />
+        </Match>
+      </Switch>
+
+      <Show when={props.value !== 0}>
+        <span
+          class=" text-sm font-mono"
+          classList={{
+            "text-green-500": props.value > 0,
+            "text-red-500": props.value < 0,
+          }}
+        >
+          <span>{`${props.value}`.replace(/^-/, "")}</span>
+          <span>{props.uow}</span>
+        </span>
+      </Show>
+    </div>
   );
 };
