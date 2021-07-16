@@ -5,6 +5,7 @@ import { For, Show } from "solid-js/web";
 import SearchField from "../SearchField";
 import { Plus, Minus } from "../icons";
 import type { Repo } from "./types";
+import debounce from "lodash.debounce";
 
 const SearchRepoForm: Component<{
   onSubmit: ({ repository: Repo }) => void;
@@ -18,7 +19,8 @@ const SearchRepoForm: Component<{
     selectedRepo: null,
   });
 
-  // TODO: add debounce
+  const setDebouncedFormData = debounce(setFormData, 500);
+
   const searchRepo = (search) => {
     if (search.length < 2) return Promise.resolve(null);
 
@@ -51,7 +53,7 @@ const SearchRepoForm: Component<{
     >
       <div>
         <SearchField
-          model={[formData, setFormData]}
+          model={[formData, setDebouncedFormData]}
           placeholder="Search Repository"
           loading={repositories.loading}
           autofocus
