@@ -198,7 +198,7 @@ const EditableTitle: Component<{
   return (
     <>
       <Show when={!edit()}>
-        <h1 class="capitalize cursor-pointer" onClick={() => setEdit(true)}>
+        <h1 class="cursor-pointer" onClick={() => setEdit(true)}>
           <span class="hover:bg-gray-700 rounded-lg px-1 py-0.5">
             {props.dashboard.name}
           </span>
