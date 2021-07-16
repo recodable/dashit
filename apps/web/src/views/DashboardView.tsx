@@ -1,5 +1,11 @@
 import type { Component } from "solid-js";
-import { createSignal, lazy, createResource, onMount } from "solid-js";
+import {
+  createSignal,
+  lazy,
+  createResource,
+  onMount,
+  createEffect,
+} from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
 import { Transition } from "solid-transition-group";
@@ -11,6 +17,10 @@ import type { Store, SetStoreFunction } from "solid-js/store";
 import { createRenderEffect } from "solid-js";
 import createHotkey from "../hotkey";
 import { addNotification, dismissNotification } from "@guillotin/solid";
+import {
+  UpdatingNotification,
+  SuccessfullyUpdatedNotification,
+} from "../notifications";
 
 declare module "solid-js" {
   namespace JSX {
@@ -155,30 +165,6 @@ const DashboardView: Component = () => {
 
 export default DashboardView;
 
-const UpdatingNotification = () => {
-  return (
-    <div
-      class="px-4 py-2 shadow-xl bg-gray-500 rounded-lg flex gap-2 items-center"
-      style="width: 300px;"
-    >
-      <Loading class="w-4 h-4" />
-      <span class="text-white">Updating...</span>
-    </div>
-  );
-};
-
-const SuccessfullyUpdatedNotification = () => {
-  return (
-    <div
-      class="px-4 py-2 shadow-xl bg-green-500 rounded-lg flex gap-2 items-center"
-      style="width: 300px;"
-    >
-      {/* <Loading class="w-4 h-4" /> */}
-      <span class="text-white">Done</span>
-    </div>
-  );
-};
-
 const EditableTitle: Component<{
   dashboard: Dashboard;
   onUpdate: (data: Partial<Dashboard>) => void;
@@ -230,11 +216,13 @@ const EditableTitle: Component<{
             setEdit(false);
           };
 
+          // FIXME: this is not working
           createHotkey("enter", submit);
           createHotkey("escape", cancel);
 
           onMount(() => {
             input.focus();
+            input.select();
           });
 
           return (

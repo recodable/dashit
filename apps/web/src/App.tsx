@@ -19,7 +19,7 @@ const App: Component = () => {
         )}
       />
 
-      <ToasterBag x={"center"} y="bottom" />
+      <ToasterBag x="center" y="bottom" />
 
       <main class="bg-gray-900 min-h-screen min-w-screen text-white">
         <Route />
