@@ -9,7 +9,10 @@ export const SimpleMetricBlock: Component<{
   uow: string;
   refetch: () => void;
   badges?: string[];
-  trend?: () => number;
+  trend?: {
+    value: () => number;
+    uow: string;
+  };
 }> = (props) => {
   return (
     <Switch>
@@ -38,8 +41,8 @@ export const SimpleMetricBlock: Component<{
           <div
             class="flex gap-2"
             classList={{
-              "items-center": !!props.trend(),
-              "items-baseline": !props.trend(),
+              "items-center": !!props.trend,
+              "items-baseline": !props.trend,
             }}
           >
             <span>
@@ -48,7 +51,7 @@ export const SimpleMetricBlock: Component<{
             </span>
 
             <div>
-              <Show when={props.trend()}>
+              <Show when={props.trend}>
                 <div class="flex items-baseline gap-1">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
@@ -66,7 +69,8 @@ export const SimpleMetricBlock: Component<{
                   </svg>
 
                   <span class="text-green-500 text-sm font-mono">
-                    {props.trend()}%
+                    <span>{props.trend.value()}</span>
+                    <span>{props.trend.uow}</span>
                   </span>
                 </div>
               </Show>

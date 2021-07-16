@@ -81,15 +81,18 @@ const GithubStarBlockWithData = (props) => {
       value={value}
       uow="stars"
       badges={[props.settings.repository.full_name]}
-      trend={() => {
-        if (!isFinite(props.period)) {
-          return null;
-        }
-
-        return Math.ceil(
-          (value() * 100) / data().data.repository.stargazers.totalCount
-        );
-      }}
+      trend={
+        !isFinite(props.period)
+          ? {
+              value: () => {
+                return Math.ceil(
+                  (value() * 100) / data().data.repository.stargazers.totalCount
+                );
+              },
+              uow: "%",
+            }
+          : null
+      }
       {...data}
       {...actions}
     />
