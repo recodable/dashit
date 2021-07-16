@@ -10,12 +10,12 @@ import { Link } from "solid-app-router";
 import { ChevronLeft, PlusCircle } from "../icons";
 import createHotkey from "../hotkey";
 import registry from "../registry";
-import type { Block } from "../types";
+import type { RegisteredBlock } from "../types";
 import { useRouter } from "solid-app-router";
 
-const [blocks, setBlocks] = createSignal<Block[]>(registry);
+const [blocks] = createSignal<RegisteredBlock[]>(registry);
 
-const needBlockSetup = (block: Block): boolean => !!block.setup;
+const needBlockSetup = (block: RegisteredBlock): boolean => !!block.setup;
 
 const CreateBlock: Component = () => {
   const [formData, setFormData] = createStore({ search: "" });
@@ -100,7 +100,7 @@ export default CreateBlock;
 
 const createNewBlock = (
   dashboardId: string | number,
-  block: Block,
+  block: RegisteredBlock,
   blockSettings: object
 ) => {
   return fetch(
@@ -115,9 +115,10 @@ const createNewBlock = (
   ).then((response) => response.json());
 };
 
-const NewBlockModal: Component<{ block: Block; closeModal: () => void }> = (
-  props
-) => {
+const NewBlockModal: Component<{
+  block: RegisteredBlock;
+  closeModal: () => void;
+}> = (props) => {
   const [router, { push }] = useRouter();
 
   const [stepIndex, setStepIndex] = createSignal(0);

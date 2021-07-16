@@ -11,7 +11,7 @@ import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
 import { Transition } from "solid-transition-group";
 import { Link } from "solid-app-router";
 import { ExclamationCicle, Loading, Plus } from "../icons";
-import type { Dashboard, DashboardWithBlocks } from "../types";
+import type { Dashboard, DashboardWithBlocks, RegisteredBlock } from "../types";
 import { useRouter } from "solid-app-router";
 import type { Store, SetStoreFunction } from "solid-js/store";
 import { createRenderEffect } from "solid-js";
@@ -21,6 +21,7 @@ import {
   UpdatingNotification,
   SuccessfullyUpdatedNotification,
 } from "../notifications";
+import registry from "../registry";
 
 declare module "solid-js" {
   namespace JSX {
@@ -92,6 +93,10 @@ const DashboardView: Component = () => {
                 const focused = () => hovered() || open();
                 const [period, setPeriod] = createSignal(30);
 
+                const registeredBlock: () => RegisteredBlock = () => {
+                  return registry.find(({ type }) => type === block.type);
+                };
+
                 return (
                   <li
                     class="small-card"
@@ -121,7 +126,7 @@ const DashboardView: Component = () => {
                         exitClass="opacity-100"
                         exitToClass="opacity-0"
                       >
-                        <Show when={focused()}>
+                        <Show when={registeredBlock().trendable && focused()}>
                           <div class="absolute top-0 right-0 px-3 py-2">
                             <select
                               name="period"

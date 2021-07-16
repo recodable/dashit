@@ -1,8 +1,9 @@
 import { Component, createResource, mergeProps } from "solid-js";
 import { SimpleMetricBlock } from "../blocks";
+import { Show } from "solid-js/web";
 
 type Props = {
-  name?: string;
+  name: string;
   isPreview?: boolean;
 };
 
@@ -18,27 +19,36 @@ export function createPackageResource({ name }: PackageParams) {
 }
 
 export const NPMDownloadBlock: Component<Props> = (props) => {
-  props = mergeProps({ name: "solid-js", isPreview: false }, props);
+  props = mergeProps({ isPreview: false }, props);
 
-  const [data, actions] = !props.isPreview
-    ? createPackageResource(props)
-    : createResource(() => ({
-        evaluation: { popularity: { downloadsCount: 1234 } },
-      }));
+  return (
+    <>
+      <Show when={props.isPreview}>
+        <SimpleMetricBlock
+          title="NPM Downloads"
+          value={() => 1234}
+          uow="downloads"
+        />
+      </Show>
+      <Show when={!props.isPreview}>
+        <NPMDownloadBlockWithData name={props.name} />
+      </Show>
+    </>
+  );
+};
+
+export default NPMDownloadBlock;
+
+export const NPMDownloadBlockWithData: Component<Props> = (props) => {
+  const [data, actions] = createPackageResource(props);
 
   return (
     <SimpleMetricBlock
       title="NPM Downloads"
-      value={() => {
-        return props.isPreview
-          ? 1234
-          : data().evaluation.popularity.downloadsCount;
-      }}
+      value={() => data().evaluation.popularity.downloadsCount}
       uow="downloads"
       {...data}
       {...actions}
     />
   );
 };
-
-export default NPMDownloadBlock;

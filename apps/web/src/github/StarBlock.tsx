@@ -6,6 +6,8 @@ import type { Props } from "./types";
 import { createGithubGraphqlResource } from "./fetcher";
 import { isAfter, isBefore, sub } from "date-fns";
 
+export const trendable = true;
+
 const GithubStarBlock: Component<Props> = (props) => {
   props = mergeProps({ isPreview: false }, props);
 

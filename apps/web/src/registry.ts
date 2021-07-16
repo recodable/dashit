@@ -1,7 +1,7 @@
 import { lazy } from "solid-js";
-import type { Block } from "./types";
+import type { RegisteredBlock } from "./types";
 
-const registry: Block[] = [
+const registry: RegisteredBlock[] = [
   {
     name: "Github Star",
     description:
@@ -13,6 +13,7 @@ const registry: Block[] = [
       description: "We will track the star from this repository",
       Component: lazy(() => import("./github/SearchRepoForm")),
     },
+    trendable: true,
   },
   {
     name: "Github Issue",
@@ -43,6 +44,7 @@ const registry: Block[] = [
     Component: lazy(() => import("./npm/DownloadBlock")),
     type: "npm/DownloadBlock",
     // Setup: lazy(() => import("./github/SearchRepoForm")),
+    trendable: true,
   },
 ];
 

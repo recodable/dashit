@@ -3,11 +3,11 @@ import { Switch, Match, For, Show } from "solid-js/web";
 import { Loading, UpTrend, DownTrend, Infinite } from "../icons";
 
 const SimpleMetricBlock: Component<{
-  loading: boolean;
+  loading?: boolean;
   title: string;
   value: () => number;
   uow: string;
-  refetch: () => void;
+  refetch?: () => void;
   badges?: string[];
   trend?: {
     value: () => number;

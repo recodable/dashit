@@ -15,10 +15,11 @@ export type BlockSetup = {
   Component: Component;
 };
 
-export type Block = {
+export type RegisteredBlock = {
   name: string;
   description: string;
   Component: Component;
   type: string;
   setup?: BlockSetup;
+  trendable?: boolean;
 };
