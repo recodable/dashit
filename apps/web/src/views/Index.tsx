@@ -5,6 +5,7 @@ import { For } from "solid-js/web";
 import { Link } from "solid-app-router";
 import type { Dashboard } from "../types";
 import { TransitionGroup } from "solid-transition-group";
+import { useRouter } from "solid-app-router";
 
 const Index: Component = () => {
   const [dashboards, { mutate }] = createResource<Dashboard[]>(() => {
@@ -12,6 +13,7 @@ const Index: Component = () => {
       (response) => response.json()
     );
   });
+  const [, { push }] = useRouter();
 
   const createNewDashboard = () => {
     return fetch(`${import.meta.env.VITE_API_URL}/dashboards`, {
@@ -28,8 +30,9 @@ const Index: Component = () => {
         <form
           onSubmit={async (e) => {
             e.preventDefault();
-            const newDashboad = await createNewDashboard();
-            mutate([newDashboad, ...dashboards()]);
+            const newDashboard = await createNewDashboard();
+            mutate([newDashboard, ...dashboards()]);
+            push(`/${newDashboard.id}`);
           }}
         >
           <button type="submit" class="button">

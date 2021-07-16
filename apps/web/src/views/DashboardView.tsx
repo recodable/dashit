@@ -38,12 +38,18 @@ const DashboardView: Component = () => {
   //   // lazy(() => import("../github/OpenPullRequestBlock")),
   // ]);
 
-  const [router] = useRouter();
+  const [router, { replace }] = useRouter();
 
   const [dashboard, { mutate }] = createResource<DashboardWithBlocks>(() => {
     return fetch(
       `${import.meta.env.VITE_API_URL}/dashboards/${router.params.id}`
     ).then((response) => response.json());
+  });
+
+  createEffect(() => {
+    if (dashboard?.error?.status === 404) {
+      replace("/404");
+    }
   });
 
   return (

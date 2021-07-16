@@ -9,10 +9,16 @@ import routes from "./routes";
 
 const worker = new Worker();
 
+class FetchError extends Error {
+  constructor(public readonly status: number, public readonly message: string) {
+    super(message);
+  }
+}
+
 fetchIntercept.register({
   response: (response) => {
     if (!response.ok) {
-      throw Error(response.statusText);
+      throw new FetchError(response.status, response.statusText);
     }
 
     return response;
