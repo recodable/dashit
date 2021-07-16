@@ -62,25 +62,34 @@ const GithubStarBlockWithData = (props) => {
     }
   `);
 
+  const value = () => {
+    if (!isFinite(props.period)) {
+      return data().data.repository.stargazers.totalCount;
+    }
+
+    return data().data.repository.stargazers.edges.filter(({ starredAt }) => {
+      return isAfter(
+        new Date(starredAt),
+        sub(new Date(), { days: props.period })
+      );
+    }).length;
+  };
+
   return (
     <SimpleMetricBlock
       title="Github Stars"
-      value={() => {
-        if (!isFinite(props.period)) {
-          return data().data.repository.stargazers.totalCount;
-        }
-
-        return data().data.repository.stargazers.edges.filter(
-          ({ starredAt }) => {
-            return isAfter(
-              new Date(starredAt),
-              sub(new Date(), { days: props.period })
-            );
-          }
-        ).length;
-      }}
+      value={value}
       uow="stars"
       badges={[props.settings.repository.full_name]}
+      trend={() => {
+        if (!isFinite(props.period)) {
+          return null;
+        }
+
+        return Math.ceil(
+          (value() * 100) / data().data.repository.stargazers.totalCount
+        );
+      }}
       {...data}
       {...actions}
     />
