@@ -82,7 +82,7 @@ const GithubStarBlockWithData = (props) => {
       uow="stars"
       badges={[props.settings.repository.full_name]}
       trend={
-        !isFinite(props.period)
+        isFinite(props.period)
           ? {
               value: () => {
                 return Math.ceil(
