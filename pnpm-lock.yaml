@@ -8,6 +8,7 @@ importers:
   apps/web:
     specifiers:
       '@guillotin/solid': link:../../../guillotin/packages/solid
+      '@rturnq/solid-auth0': link:../../../solid-auth0
       '@types/node': ^16.3.1
       autoprefixer: ^10.2.6
       concurrently: ^6.2.0
@@ -31,6 +32,7 @@ importers:
       whatwg-fetch: ^3.6.2
     dependencies:
       '@guillotin/solid': link:../../../guillotin/packages/solid
+      '@rturnq/solid-auth0': link:../../../solid-auth0
       date-fns: 2.22.1
       fetch-intercept: 2.4.0
       hotkeys-js: 3.8.7
