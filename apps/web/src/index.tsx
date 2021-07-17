@@ -30,11 +30,10 @@ fetchIntercept.register({
 render(
   () => (
     <Auth0
-      domain={import.meta.env.VITE_AUTH0_DOMAIN} // domain from Auth0
-      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID} // client_id from Auth0
-      // audience="..." // audience from Auth0
-      logoutRedirectUri={`${window.location.origin}/logout`} // Absolute URI Auth0 logout redirect
-      loginRedirectUri={`${window.location.origin}`} // Absolute URI Auth0 login
+      domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
+      logoutRedirectUri={`${window.location.origin}/logout`}
+      loginRedirectUri={`${window.location.origin}`}
     >
       <Switch>
         <Match when={!useAuth0().isInitialized()}>
