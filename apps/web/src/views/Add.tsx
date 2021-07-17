@@ -77,7 +77,7 @@ const CreateBlock: Component = () => {
                           </p>
 
                           <button
-                            class="bg-black border-gray-900 px-7 py-4 shadow-lg text-lg font-semibold flex gap-3 items-center hover:bg-gray-900"
+                            class="bg-black border-gray-900 px-7 py-4 shadow-lg text-lg font-semibold flex gap-3 items-center hover:bg-gray-800"
                             type="button"
                           >
                             <span>
