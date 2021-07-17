@@ -18,6 +18,10 @@ h3 {
   @apply text-2xl font-bold;
 }
 
+.screen {
+  @apply w-screen h-screen flex flex-col justify-center items-center -mt-16;
+}
+
 .card {
   @apply rounded-lg bg-gray-800 text-white hover:bg-gray-700 cursor-pointer shadow overflow-hidden;
 }
