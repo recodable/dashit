@@ -5,7 +5,7 @@ import {
   ToasterBag,
 } from "@guillotin/solid";
 import { Route, Link } from "solid-app-router";
-import { createSignal } from "solid-js";
+import { createSignal, onCleanup } from "solid-js";
 import { Show, Switch, Match } from "solid-js/web";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import LoginButton from "./LoginButton";
@@ -248,8 +248,14 @@ const ProfileDropdown = () => {
   const [isOpen, setIsOpen] = createSignal(false);
   const { user, logout } = useAuth0();
 
+  const close = () => setIsOpen(false);
+
+  window.addEventListener("click", close);
+
+  onCleanup(() => window.removeEventListener("click", close));
+
   return (
-    <div class="ml-3 relative">
+    <div onClick={(e) => e.stopPropagation()} class="ml-3 relative">
       <div>
         <button
           type="button"
@@ -270,7 +276,7 @@ const ProfileDropdown = () => {
 
       <Show when={isOpen()}>
         <div
-          class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none"
+          class="origin-top-right absolute right-0 mt-2 w-48 rounded-md shadow-lg py-1 bg-black ring-1 ring-black ring-opacity-5 focus:outline-none"
           role="menu"
           aria-orientation="vertical"
           aria-labelledby="user-menu-button"
@@ -297,7 +303,7 @@ const ProfileDropdown = () => {
           <button
             onClick={logout}
             type="button"
-            class="block px-4 py-2 text-sm text-gray-700"
+            class="block px-4 py-2 text-sm text-gray-200 hover:text-white"
             role="menuitem"
             tabindex="-1"
             id="user-menu-item-2"
