@@ -18,7 +18,9 @@ export const Loading: Component<Stylable> = (props) => {
 
   return (
     <svg
-      {...overrideClass([props.class, "animate-spin text-white"].join(" "))}
+      {...overrideClass(
+        [props.class, "animate-spin text-white"].filter((v) => v).join(" ")
+      )}
       xmlns="http://www.w3.org/2000/svg"
       fill="none"
       viewBox="0 0 24 24"
