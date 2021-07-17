@@ -21,7 +21,7 @@ import {
   UpdatingNotification,
   SuccessfullyUpdatedNotification,
 } from "../notifications";
-import registry from "../registry";
+import { registeredBlocks } from "../registry";
 
 declare module "solid-js" {
   namespace JSX {
@@ -94,7 +94,9 @@ const DashboardView: Component = () => {
                 const [period, setPeriod] = createSignal(30);
 
                 const registeredBlock: () => RegisteredBlock = () => {
-                  return registry.find(({ type }) => type === block.type);
+                  return registeredBlocks.find(
+                    ({ type }) => type === block.type
+                  );
                 };
 
                 return (
@@ -105,6 +107,7 @@ const DashboardView: Component = () => {
                   >
                     <ErrorBoundary
                       fallback={(error, reset) => {
+                        console.log(error);
                         return (
                           <div
                             onClick={reset}

@@ -53,3 +53,9 @@ const registry: { [k: string]: RegisteredBlock[] } = {
 };
 
 export default registry;
+
+export const registeredBlocks: RegisteredBlock[] = Object.values(
+  registry
+).reduce((acc, blocks) => {
+  return [...acc, ...blocks];
+}, []);
