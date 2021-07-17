@@ -1,4 +1,3 @@
-import Index from "./pages/DashboardIndex";
 import DashboardView from "./pages/DashboardView";
 import Add from "./pages/Add";
 import NotFound from "./pages/NotFound";
