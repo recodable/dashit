@@ -4,8 +4,10 @@ import App from "./App";
 // import Worker from "./worker.js?worker";
 import fetchIntercept from "fetch-intercept";
 import { Router } from "solid-app-router";
-import routes from "./routes";
-import { Auth0 } from "@rturnq/solid-auth0";
+import { routes, unauthenticatedRoutes } from "./routes";
+import { Auth0, useAuth0 } from "@rturnq/solid-auth0";
+import { Switch, Match } from "solid-js";
+import { Loading } from "./icons";
 
 // const worker = new Worker();
 
@@ -34,9 +36,25 @@ render(
       logoutRedirectUri={`${window.location.origin}/logout`} // Absolute URI Auth0 logout redirect
       loginRedirectUri={`${window.location.origin}`} // Absolute URI Auth0 login
     >
-      <Router routes={routes}>
-        <App />
-      </Router>
+      <Switch>
+        <Match when={!useAuth0().isInitialized()}>
+          <div class="w-screen h-screen bg-gray-900 flex justify-center items-center">
+            <Loading class="w-10 h-10" />
+          </div>
+        </Match>
+
+        <Match when={!useAuth0().isAuthenticated()}>
+          <Router routes={unauthenticatedRoutes}>
+            <App />
+          </Router>
+        </Match>
+
+        <Match when={true}>
+          <Router routes={routes}>
+            <App />
+          </Router>
+        </Match>
+      </Switch>
     </Auth0>
   ),
   document.getElementById("root")

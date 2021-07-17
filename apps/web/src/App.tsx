@@ -5,9 +5,10 @@ import {
   ToasterBag,
 } from "@guillotin/solid";
 import { Route, Link } from "solid-app-router";
-import { createSignal, createEffect } from "solid-js";
+import { createSignal } from "solid-js";
 import { Show, Switch, Match } from "solid-js/web";
 import { useAuth0 } from "@rturnq/solid-auth0";
+import LoginButton from "./LoginButton";
 
 const App: Component = () => {
   return (
@@ -24,11 +25,13 @@ const App: Component = () => {
 
       <ToasterBag x="center" y="bottom" />
 
-      <Navbar />
+      <div class="bg-gray-900 min-h-screen min-w-screen text-white">
+        <Navbar />
 
-      <main class="bg-gray-900 min-h-screen min-w-screen text-white">
-        <Route />
-      </main>
+        <main class="mt-12">
+          <Route />
+        </main>
+      </div>
     </div>
   );
 };
@@ -42,7 +45,7 @@ const Navbar = () => {
   // createEffect(() => console.log(isAuthenticated()));
 
   return (
-    <nav class="bg-gray-800">
+    <nav class="bg-gray-800 fixed top-0 inset-x-0">
       <div class="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
         <div class="relative flex items-center justify-between h-16">
           <div class="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -307,19 +310,5 @@ const ProfileDropdown = () => {
         </div>
       </Show>
     </div>
-  );
-};
-
-const LoginButton = () => {
-  const { loginWithRedirect } = useAuth0();
-
-  return (
-    <button
-      onClick={() => loginWithRedirect()}
-      type="button"
-      class="ml-6 inline-flex items-center px-4 py-2 border border-transparent text-sm font-medium rounded-md shadow-sm text-white bg-red-700 hover:bg-red-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-red-600"
-    >
-      Login
-    </button>
   );
 };

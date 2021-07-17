@@ -7,7 +7,7 @@ import type { Dashboard } from "../types";
 import { TransitionGroup } from "solid-transition-group";
 import { useRouter } from "solid-app-router";
 
-const Index: Component = () => {
+const DashboardIndex: Component = () => {
   const [dashboards, { mutate }] = createResource<Dashboard[]>(() => {
     return fetch(`${import.meta.env.VITE_API_URL}/dashboards`).then(
       (response) => response.json()
@@ -70,4 +70,4 @@ const Index: Component = () => {
   );
 };
 
-export default Index;
+export default DashboardIndex;
