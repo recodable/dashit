@@ -25,10 +25,10 @@ const App: Component = () => {
 
       <ToasterBag x="center" y="bottom" />
 
-      <div class="bg-gray-900 min-h-screen min-w-screen text-white">
+      <div class="min-h-screen min-w-screen pt-16">
         <Navbar />
 
-        <main class="mt-12">
+        <main class="-pt-16">
           <Route />
         </main>
       </div>
@@ -39,10 +39,7 @@ const App: Component = () => {
 export default App;
 
 const Navbar = () => {
-  // const [isAuth] = createSignal(false);
   const { isAuthenticated } = useAuth0();
-
-  // createEffect(() => console.log(isAuthenticated()));
 
   return (
     <nav class="bg-gray-800 fixed top-0 inset-x-0">
