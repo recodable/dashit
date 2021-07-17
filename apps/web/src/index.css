@@ -11,7 +11,7 @@ h1 {
 }
 
 h2 {
-  @apply text-2xl font-bold;
+  @apply text-3xl font-bold;
 }
 
 .card {
@@ -28,4 +28,16 @@ h2 {
 
 .button {
   @apply flex items-center gap-3 bg-gray-600 rounded-lg hover:bg-gray-700 px-8 py-4 hover:text-gray-200 text-xl;
+}
+
+.bg-dark-gradiant {
+  @apply bg-gradient-to-r from-purple-600 via-pink-700 to-red-800;
+}
+
+.bg-light-gradiant {
+  @apply bg-gradient-to-r from-purple-400 via-pink-500 to-red-500;
+}
+
+.bg-gray-gradiant {
+  @apply bg-gradient-to-r from-gray-400 to-gray-600;
 }

@@ -149,10 +149,10 @@ const SearchRepoForm: Component<{
       <div class="flex gap-4">
         <button
           type="submit"
-          class="py-4 px-6 bg-gradient-to-r font-semibold"
+          class="py-4 px-6 font-semibold"
           classList={{
-            "from-purple-400 via-pink-500 to-red-500": !!selectedRepo(),
-            "from-gray-400 to-gray-600 cursor-not-allowed": !selectedRepo(),
+            "bg-light-gradiant": !!selectedRepo(),
+            "bg-gray-gradiant": !selectedRepo(),
           }}
           disabled={!selectedRepo()}
         >

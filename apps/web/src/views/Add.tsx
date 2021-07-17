@@ -43,53 +43,62 @@ const CreateBlock: Component = () => {
           </div>
         </div>
 
-        <ul class="grid grid-cols-3 gap-4">
-          <TransitionGroup
-            enterActiveClass="transition ease-in-out duration-100"
-            enterClass="opacity-0"
-            enterToClass="opacity-100"
-            exitActiveClass="transition ease-in-out duration-100"
-            exitClass="opacity-100"
-            exitToClass="opacity-0"
-          >
-            <For
-              each={blocks().filter(({ name }) => {
-                return name
-                  .toLowerCase()
-                  .includes(formData.search.toLowerCase());
-              })}
-            >
-              {(block) => {
-                const [hovered, setHovered] = createSignal(false);
+        <ul>
+          <li class="p-6 rounded-lg bg-dark-gradiant">
+            <h2 class="mb-6">Github</h2>
 
-                return (
-                  <li
-                    onClick={() => {
-                      if (!needBlockSetup(block)) {
-                        return push(dashboardUrl);
-                      }
+            <ul class="grid grid-cols-3 gap-4">
+              <TransitionGroup
+                enterActiveClass="transition ease-in-out duration-100"
+                enterClass="opacity-0"
+                enterToClass="opacity-100"
+                exitActiveClass="transition ease-in-out duration-100"
+                exitClass="opacity-100"
+                exitToClass="opacity-0"
+              >
+                <For
+                  each={blocks().filter(({ name }) => {
+                    return name
+                      .toLowerCase()
+                      .includes(formData.search.toLowerCase());
+                  })}
+                >
+                  {(block) => {
+                    const [hovered, setHovered] = createSignal(false);
 
-                      setModal({ Component: NewBlockModal, data: { block } });
-                    }}
-                    onMouseEnter={() => setHovered(true)}
-                    onMouseLeave={() => setHovered(false)}
-                    class="small-card"
-                  >
-                    <Show when={hovered()}>
-                      <div class="absolute inset-0 bg-purple-800 opacity-70 flex justify-center items-center text-purple-200">
-                        <PlusCircle class="w-7 h-7" />
-                      </div>
-                    </Show>
+                    return (
+                      <li
+                        onClick={() => {
+                          if (!needBlockSetup(block)) {
+                            return push(dashboardUrl);
+                          }
 
-                    <Dynamic<{ isPreview: boolean }>
-                      component={block.Component}
-                      isPreview
-                    />
-                  </li>
-                );
-              }}
-            </For>
-          </TransitionGroup>
+                          setModal({
+                            Component: NewBlockModal,
+                            data: { block },
+                          });
+                        }}
+                        onMouseEnter={() => setHovered(true)}
+                        onMouseLeave={() => setHovered(false)}
+                        class="small-card transition duration-500 ease-in-out transform hover:-translate-y-1 hover:scale-105"
+                      >
+                        <Show when={hovered()}>
+                          <div class="absolute inset-0 bg-purple-600 opacity-70 flex justify-center items-center text-purple-200">
+                            <PlusCircle class="w-7 h-7" />
+                          </div>
+                        </Show>
+
+                        <Dynamic<{ isPreview: boolean }>
+                          component={block.Component}
+                          isPreview
+                        />
+                      </li>
+                    );
+                  }}
+                </For>
+              </TransitionGroup>
+            </ul>
+          </li>
         </ul>
       </div>
     </div>
