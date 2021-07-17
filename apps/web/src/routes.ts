@@ -1,11 +1,11 @@
-import Index from "./views/DashboardIndex";
-import DashboardView from "./views/DashboardView";
-import Add from "./views/Add";
-import NotFound from "./views/NotFound";
-import Logout from "./views/Logout";
-import NeedAuth from "./views/NeedAuth";
-import DashboardIndex from "./views/DashboardIndex";
-import Home from "./views/Home";
+import Index from "./pages/DashboardIndex";
+import DashboardView from "./pages/DashboardView";
+import Add from "./pages/Add";
+import NotFound from "./pages/NotFound";
+import Logout from "./pages/Logout";
+import NeedAuth from "./pages/NeedAuth";
+import DashboardIndex from "./pages/DashboardIndex";
+import Home from "./pages/Home";
 
 export const routes = [
   { path: "/", component: Home },
