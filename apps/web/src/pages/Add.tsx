@@ -66,7 +66,7 @@ const CreateBlock: Component = () => {
                     exitClass="opacity-100"
                     exitToClass="opacity-0"
                   >
-                    <Show when={hovered()}>
+                    <Show when={false && hovered()}>
                       <div class="absolute inset-0 flex flex-col gap-6 justify-center items-center">
                         <div class="absolute inset-0 bg-gray-500 opacity-70 flex flex-col gap-6 justify-center items-center text-purple-200 z-20" />
 
