@@ -5,6 +5,8 @@ import Koa from "koa";
 import Router from "@koa/router";
 import cors from "@koa/cors";
 import body from "koa-body";
+import jwt from "koa-jwt";
+import jwks from "jwks-rsa";
 
 dotenv.config({ path: join(process.cwd(), ".env.local") });
 
@@ -23,6 +25,20 @@ const app = new Koa();
 
 app.use(cors());
 app.use(body());
+
+app.use(
+  jwt({
+    secret: jwks.koaJwtSecret({
+      cache: true,
+      rateLimit: true,
+      jwksRequestsPerMinute: 5,
+      jwksUri: `https://${process.env.VITE_AUTH0_DOMAIN}/.well-known/jwks.json`,
+    }),
+    audience: process.env.VITE_API_URL,
+    issuer: `https://${process.env.VITE_AUTH0_DOMAIN}/`,
+    algorithms: ["RS256"],
+  })
+);
 
 const router = new Router();
 

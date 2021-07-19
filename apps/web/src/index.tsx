@@ -34,6 +34,7 @@ render(
       clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
       logoutRedirectUri={`${window.location.origin}/logout`}
       loginRedirectUri={`${window.location.origin}`}
+      audience={import.meta.env.VITE_API_URL as string}
     >
       <Switch>
         <Match when={!useAuth0().isInitialized()}>
