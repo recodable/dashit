@@ -2,6 +2,10 @@ import { createServer } from "http";
 import knex from "knex";
 import dotenv from "dotenv";
 import { join } from "path";
+import Koa from "koa";
+import Router from "@koa/router";
+import cors from "@koa/cors";
+import body from "koa-body";
 
 dotenv.config({ path: join(process.cwd(), ".env.local") });
 
@@ -15,6 +19,25 @@ const db = knex({
     database: process.env.DB_NAME,
   },
 });
+
+const app = new Koa();
+
+app.use(cors());
+
+app.use(body());
+
+const router = new Router();
+
+router.get("/dashboards", async (ctx) => {
+  ctx.body = await db
+    .select("*")
+    .from("dashboards")
+    .orderBy("created_at", "desc");
+});
+
+app.use(router.routes()).use(router.allowedMethods());
+
+app.listen(8000, () => console.log("API running on port 8000"));
 
 createServer(async (req, res) => {
   let matches;
@@ -127,4 +150,4 @@ createServer(async (req, res) => {
     res.writeHead(500);
     return res.end("Something very wrong happened.");
   }
-}).listen(8000);
+});

@@ -1,12 +1,10 @@
 {
-  "name": "@recodable/jumpdash",
+  "name": "@jumpdash/web",
   "version": "0.0.0",
   "scripts": {
     "start": "vite",
     "dev": "concurrently npm:dev:*",
     "dev:app": "vite",
-    "dev:server": "nodemon --watch 'src/server.ts' --ext 'ts,json' --exec 'ts-node --files src/server.ts'",
-    "dev:db": "docker-compose up -d",
     "build": "vite build",
     "knex": "TS_NODE_COMPILER_OPTIONS='{ \"module\": \"commonjs\" }' knex",
     "make:migration": "knex migrate:make -x ts",
@@ -14,6 +12,7 @@
     "db:fresh": "knex migrate:rollback --all && knex migrate:latest"
   },
   "devDependencies": {
+    "@types/koa": "^2.13.4",
     "@types/node": "^16.3.1",
     "autoprefixer": "^10.2.6",
     "concurrently": "^6.2.0",
@@ -26,11 +25,15 @@
   },
   "dependencies": {
     "@guillotin/solid": "link:../../../guillotin/packages/solid",
+    "@koa/cors": "^3.1.0",
+    "@koa/router": "^10.0.0",
     "@rturnq/solid-auth0": "link:../../../solid-auth0",
     "date-fns": "^2.22.1",
     "fetch-intercept": "^2.4.0",
     "hotkeys-js": "^3.8.7",
     "knex": "^0.95.7",
+    "koa": "^2.13.1",
+    "koa-body": "^4.2.0",
     "lodash.debounce": "^4.0.8",
     "pg": "^8.6.0",
     "solid-app-router": "^0.0.50",
