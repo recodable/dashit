@@ -6,19 +6,29 @@ import { Link } from "solid-app-router";
 import type { Dashboard } from "../types";
 import { TransitionGroup } from "solid-transition-group";
 import { useRouter } from "solid-app-router";
+import { useAuth0 } from "@rturnq/solid-auth0";
 
 const DashboardIndex: Component = () => {
-  const [dashboards, { mutate }] = createResource<Dashboard[]>(() => {
-    return fetch(`${import.meta.env.VITE_API_URL}/dashboards`).then(
-      (response) => response.json()
-    );
+  const { getToken } = useAuth0();
+
+  const [dashboards, { mutate }] = createResource<Dashboard[]>(async () => {
+    const token = await getToken();
+
+    return fetch(`${import.meta.env.VITE_API_URL}/dashboards`, {
+      headers: { Authorization: `Bearer ${token}` },
+    }).then((response) => response.json());
   });
+
   const [, { push }] = useRouter();
 
-  const createNewDashboard = () => {
+  const createNewDashboard = async () => {
+    const token = await getToken();
     return fetch(`${import.meta.env.VITE_API_URL}/dashboards`, {
       method: "POST",
       body: JSON.stringify({}),
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
     }).then((response) => response.json());
   };
 
@@ -32,7 +42,7 @@ const DashboardIndex: Component = () => {
             e.preventDefault();
             const newDashboard = await createNewDashboard();
             mutate([newDashboard, ...dashboards()]);
-            push(`/${newDashboard.id}`);
+            push(`/dashboards/${newDashboard.id}`);
           }}
         >
           <button type="submit" class="button">
@@ -53,7 +63,7 @@ const DashboardIndex: Component = () => {
               return (
                 <li class="card">
                   <Link
-                    href={`/${dashboard.id}`}
+                    href={`/dashboards/${dashboard.id}`}
                     class="flex justify-between px-8 py-10"
                   >
                     <h2>{dashboard.name}</h2>

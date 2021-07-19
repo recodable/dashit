@@ -10,8 +10,8 @@ export const routes = [
   { path: "/", component: Home },
   { path: "/dashboards", component: DashboardIndex },
   { path: "/logout", component: Logout },
-  { path: "/:id", component: DashboardView },
-  { path: "/:id/add", component: Add },
+  { path: "/dashboards/:id", component: DashboardView },
+  { path: "/dashboards/:id/add", component: Add },
   { path: "/404", component: NotFound },
   { path: "*all", component: NotFound },
 ];

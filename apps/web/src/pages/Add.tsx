@@ -11,6 +11,7 @@ import createHotkey from "../hotkey";
 import registry from "../registry";
 import type { RegisteredBlock } from "../types";
 import { useRouter } from "solid-app-router";
+import { useAuth0 } from "@rturnq/solid-auth0";
 
 const needBlockSetup = (block: RegisteredBlock): boolean => !!block.setup;
 
@@ -166,11 +167,15 @@ export default CreateBlock;
 const createNewBlock = (
   dashboardId: string | number,
   block: RegisteredBlock,
-  blockSettings: object
+  blockSettings: object,
+  token: string
 ) => {
   return fetch(
     `${import.meta.env.VITE_API_URL}/dashboards/${dashboardId}/blocks`,
     {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
       method: "POST",
       body: JSON.stringify({
         type: block.type,
@@ -187,6 +192,8 @@ const NewBlockModal: Component<{
   const [router, { push }] = useRouter();
 
   const [stepIndex, setStepIndex] = createSignal(0);
+
+  const { getToken } = useAuth0();
 
   const steps = [
     // false
@@ -233,14 +240,17 @@ const NewBlockModal: Component<{
                 component={props.block.setup.Component}
                 onCancel={props.closeModal}
                 onSubmit={async (settings) => {
+                  const token = await getToken();
+
                   await createNewBlock(
                     router.params.id as string,
                     props.block,
-                    settings
+                    settings,
+                    token
                   );
 
                   props.closeModal();
-                  push(`/${router.params.id}`);
+                  push(`/dashboards/${router.params.id}`);
                 }}
               />
             </ErrorBoundary>

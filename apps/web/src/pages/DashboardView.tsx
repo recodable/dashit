@@ -22,6 +22,7 @@ import {
   SuccessfullyUpdatedNotification,
 } from "../notifications";
 import { registeredBlocks } from "../registry";
+import { useAuth0 } from "../../../../../solid-auth0/dist";
 
 declare module "solid-js" {
   namespace JSX {
@@ -50,12 +51,17 @@ const DashboardView: Component = () => {
   // ]);
 
   const [router, { replace }] = useRouter();
+  const { getToken } = useAuth0();
 
-  const [dashboard, { mutate }] = createResource<DashboardWithBlocks>(() => {
-    return fetch(
-      `${import.meta.env.VITE_API_URL}/dashboards/${router.params.id}`
-    ).then((response) => response.json());
-  });
+  const [dashboard, { mutate }] = createResource<DashboardWithBlocks>(
+    async () => {
+      const token = await getToken();
+      return fetch(
+        `${import.meta.env.VITE_API_URL}/dashboards/${router.params.id}`,
+        { headers: { Authorization: `Bearer ${token}` } }
+      ).then((response) => response.json());
+    }
+  );
 
   createEffect(() => {
     if (dashboard?.error?.status === 404) {
@@ -79,7 +85,7 @@ const DashboardView: Component = () => {
               onUpdate={({ name }) => mutate({ ...dashboard(), name })}
             />
 
-            <Link href={`/${dashboard().id}/add`} class="button">
+            <Link href={`/dashboards/${dashboard().id}/add`} class="button">
               <Plus class="w-5 h-5" />
               <span>Add Block</span>
             </Link>
@@ -179,8 +185,10 @@ const EditableTitle: Component<{
 }> = (props) => {
   const [edit, setEdit] = createSignal(false);
   const [formData, setFormData] = createStore({ name: props.dashboard.name });
+  const { getToken } = useAuth0();
 
   const update = async () => {
+    const token = await getToken();
     const notification = addNotification(UpdatingNotification, {});
 
     const updatedDashboard = await fetch(
@@ -188,6 +196,9 @@ const EditableTitle: Component<{
       {
         method: "PUT",
         body: JSON.stringify(formData),
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
       }
     ).then((response) => response.json());
 
