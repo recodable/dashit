@@ -16,7 +16,7 @@ export const routes = [
   { path: "*all", component: NotFound },
 ];
 
-export const publicRoutes = ["/", "/:id", "/logout", "/404", "*all"];
+export const publicRoutes = ["/", "/dashboards/:id", "/logout", "/404", "*all"];
 
 export const unauthenticatedRoutes = routes.map((route) => {
   if (publicRoutes.includes(route.path)) return route;

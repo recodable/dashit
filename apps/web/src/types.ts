@@ -3,6 +3,7 @@ import type { Component } from "solid-js";
 export type Dashboard = {
   id: number;
   name: string;
+  owner_id: string;
 };
 
 export interface DashboardWithBlocks extends Dashboard {

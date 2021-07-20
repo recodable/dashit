@@ -26,7 +26,9 @@ const app = new Koa();
 app.use(cors());
 app.use(body());
 
-app.use(
+const dashboardRouter = new Router();
+
+dashboardRouter.use(
   jwt({
     secret: jwks.koaJwtSecret({
       cache: true,
@@ -40,30 +42,101 @@ app.use(
   })
 );
 
-const router = new Router();
+// dashboardRouter.use(async (ctx, next) => {
+//   await next();
 
-router.get("/dashboards", async (ctx) => {
+//   if (
+//     ctx.request.method !== "GET" &&
+//     ctx.body?.owner_id !== ctx.state.user.sub
+//   ) {
+//     ctx.status = 401;
+//     ctx.body = "Unauthorized";
+//   }
+// });
+
+dashboardRouter.get("/dashboards", async (ctx) => {
   ctx.body = await db
     .select("*")
     .from("dashboards")
+    .where({ owner_id: ctx.state.user.sub })
     .orderBy("created_at", "desc");
 });
 
-router.post("/dashboards", async (ctx) => {
+dashboardRouter.post("/dashboards", async (ctx) => {
   const { name = "(Untitled)" } = JSON.parse(ctx.request.body);
 
-  const [newDashboard] = await db("dashboards").insert({ name }).returning("*");
+  const [newDashboard] = await db("dashboards")
+    .insert({ name, owner_id: ctx.state.user.sub })
+    .returning("*");
 
   ctx.body = newDashboard;
 });
 
-router.get("/dashboards/:id", async (ctx) => {
-  try {
-    const dashboard = await db
-      .select("*")
+const fetchDashboard = async (ctx, next) => {
+  ctx.state.dashboard = await db
+    .select("*")
+    .from("dashboards")
+    .where({ "dashboards.id": ctx.params.id })
+    .first();
+
+  await next();
+};
+
+const checkDashboardOwnership = async (ctx, next) => {
+  if (ctx.state.dashboard.owner_id !== ctx.state.user.sub) {
+    ctx.status = 401;
+    ctx.body = "Unauthorized";
+  } else {
+    await next();
+  }
+};
+
+dashboardRouter.put(
+  "/dashboards/:id",
+  fetchDashboard,
+  checkDashboardOwnership,
+  async (ctx) => {
+    const [updatedDashboard] = await db
       .from("dashboards")
-      .where({ "dashboards.id": ctx.params.id })
-      .first();
+      .where({ id: ctx.params.id })
+      .update({
+        name: JSON.parse(ctx.request.body).name || "(Untitled)",
+      })
+      .returning("*");
+
+    ctx.body = updatedDashboard;
+  }
+);
+
+dashboardRouter.post(
+  "/dashboards/:id/blocks",
+  fetchDashboard,
+  checkDashboardOwnership,
+  async (ctx) => {
+    const { type, settings } = JSON.parse(ctx.request.body);
+
+    const [newBlock] = await db
+      .insert({
+        type,
+        settings: JSON.stringify({
+          repository: { full_name: settings.repository.full_name },
+        }),
+        dashboard_id: ctx.params.id,
+      })
+      .into("blocks")
+      .returning("*");
+
+    ctx.body = newBlock;
+  }
+);
+
+app.use(dashboardRouter.routes()).use(dashboardRouter.allowedMethods());
+
+const publicRouter = new Router();
+
+publicRouter.get("/dashboards/:id", fetchDashboard, async (ctx) => {
+  try {
+    const { dashboard } = ctx.state;
 
     const dashboardBlocks = await db
       .select("*")
@@ -72,41 +145,13 @@ router.get("/dashboards/:id", async (ctx) => {
 
     ctx.body = { ...dashboard, blocks: dashboardBlocks };
   } catch (err) {
+    console.error(err);
     ctx.status = 404;
     ctx.body = "Not Found";
   }
 });
 
-router.put("/dashboards/:id", async (ctx) => {
-  const [updatedDashboard] = await db
-    .from("dashboards")
-    .where({ id: ctx.params.id })
-    .update({
-      name: JSON.parse(ctx.request.body).name || "(Untitled)",
-    })
-    .returning("*");
-
-  ctx.body = updatedDashboard;
-});
-
-router.post("/dashboards/:id/blocks", async (ctx) => {
-  const { type, settings } = JSON.parse(ctx.request.body);
-
-  const [newBlock] = await db
-    .insert({
-      type,
-      settings: JSON.stringify({
-        repository: { full_name: settings.repository.full_name },
-      }),
-      dashboard_id: ctx.params.id,
-    })
-    .into("blocks")
-    .returning("*");
-
-  ctx.body = newBlock;
-});
-
-app.use(router.routes()).use(router.allowedMethods());
+app.use(publicRouter.routes()).use(publicRouter.allowedMethods());
 
 app.listen(8000, () => {
   console.log("API running on port 8000");

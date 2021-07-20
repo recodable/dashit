@@ -20,9 +20,10 @@ import { addNotification, dismissNotification } from "@guillotin/solid";
 import {
   UpdatingNotification,
   SuccessfullyUpdatedNotification,
+  UnauthorizedUpdatedNotification,
 } from "../notifications";
 import { registeredBlocks } from "../registry";
-import { useAuth0 } from "../../../../../solid-auth0/dist";
+import { useAuth0 } from "@rturnq/solid-auth0";
 
 declare module "solid-js" {
   namespace JSX {
@@ -51,17 +52,20 @@ const DashboardView: Component = () => {
   // ]);
 
   const [router, { replace }] = useRouter();
-  const { getToken } = useAuth0();
+  const { isAuthenticated, user } = useAuth0();
 
   const [dashboard, { mutate }] = createResource<DashboardWithBlocks>(
     async () => {
-      const token = await getToken();
+      // const token = await getToken();
       return fetch(
-        `${import.meta.env.VITE_API_URL}/dashboards/${router.params.id}`,
-        { headers: { Authorization: `Bearer ${token}` } }
+        `${import.meta.env.VITE_API_URL}/dashboards/${router.params.id}`
+        // { headers: { Authorization: `Bearer ${token}` } }
       ).then((response) => response.json());
     }
   );
+
+  const isOwner = () =>
+    isAuthenticated() && user().sub === dashboard().owner_id;
 
   createEffect(() => {
     if (dashboard?.error?.status === 404) {
@@ -83,12 +87,15 @@ const DashboardView: Component = () => {
             <EditableTitle
               dashboard={dashboard()}
               onUpdate={({ name }) => mutate({ ...dashboard(), name })}
+              editable={isOwner()}
             />
 
-            <Link href={`/dashboards/${dashboard().id}/add`} class="button">
-              <Plus class="w-5 h-5" />
-              <span>Add Block</span>
-            </Link>
+            <Show when={isOwner()}>
+              <Link href={`/dashboards/${dashboard().id}/add`} class="button">
+                <Plus class="w-5 h-5" />
+                <span>Add Block</span>
+              </Link>
+            </Show>
           </div>
 
           <ul class="grid grid-cols-3 gap-4 py-6">
@@ -182,6 +189,7 @@ export default DashboardView;
 const EditableTitle: Component<{
   dashboard: Dashboard;
   onUpdate: (data: Partial<Dashboard>) => void;
+  editable?: boolean;
 }> = (props) => {
   const [edit, setEdit] = createSignal(false);
   const [formData, setFormData] = createStore({ name: props.dashboard.name });
@@ -191,7 +199,8 @@ const EditableTitle: Component<{
     const token = await getToken();
     const notification = addNotification(UpdatingNotification, {});
 
-    const updatedDashboard = await fetch(
+    let afterNotification;
+    return fetch(
       `${import.meta.env.VITE_API_URL}/dashboards/${props.dashboard.id}`,
       {
         method: "PUT",
@@ -200,20 +209,38 @@ const EditableTitle: Component<{
           Authorization: `Bearer ${token}`,
         },
       }
-    ).then((response) => response.json());
+    )
+      .then((response) => response.json())
+      .then(async (updatedDashboard) => {
+        props.onUpdate(updatedDashboard);
 
-    props.onUpdate(updatedDashboard);
+        afterNotification = SuccessfullyUpdatedNotification;
+      })
+      .catch((e) => {
+        afterNotification = UnauthorizedUpdatedNotification;
+      })
+      .finally(async () => {
+        await new Promise((resolve) => setTimeout(resolve, 500));
 
-    await new Promise((resolve) => setTimeout(resolve, 500));
-    dismissNotification(notification);
-    addNotification(SuccessfullyUpdatedNotification);
+        dismissNotification(notification);
+
+        if (afterNotification) {
+          addNotification(afterNotification);
+        }
+      });
   };
 
   return (
     <>
       <Show when={!edit()}>
-        <h1 class="cursor-pointer" onClick={() => setEdit(true)}>
-          <span class="hover:bg-gray-700 rounded-lg px-1 py-0.5">
+        <h1
+          classList={{ "cursor-pointer": props.editable }}
+          onClick={() => props.editable && setEdit(true)}
+        >
+          <span
+            class="px-1 py-0.5"
+            classList={{ "hover:bg-gray-700 rounded-lg": props.editable }}
+          >
             {props.dashboard.name}
           </span>
         </h1>
