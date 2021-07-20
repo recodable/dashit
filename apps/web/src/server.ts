@@ -7,6 +7,8 @@ import cors from "@koa/cors";
 import body from "koa-body";
 import jwt, { Options as JWTOptions } from "koa-jwt";
 import jwks from "jwks-rsa";
+import fetch from "node-fetch";
+import { encode } from "querystring";
 
 dotenv.config({ path: join(process.cwd(), ".env.local") });
 
@@ -44,18 +46,6 @@ const createJWTMiddleware = (options: Partial<JWTOptions> = {}) => {
 const dashboardRouter = new Router();
 
 dashboardRouter.use(createJWTMiddleware());
-
-// dashboardRouter.use(async (ctx, next) => {
-//   await next();
-
-//   if (
-//     ctx.request.method !== "GET" &&
-//     ctx.body?.owner_id !== ctx.state.user.sub
-//   ) {
-//     ctx.status = 401;
-//     ctx.body = "Unauthorized";
-//   }
-// });
 
 dashboardRouter.get("/dashboards", async (ctx) => {
   ctx.body = await db
@@ -183,18 +173,46 @@ oauthRouter.get("/auth/github", async (ctx) => {
   );
 });
 
-oauthRouter.get("/auth/github/callback", async (ctx) => {
+const fetchAccess = (type: string) => {
+  return async (ctx, next) => {
+    ctx.state.access = await db
+      .select("*")
+      .from("accesses")
+      .where({ user_id: ctx.state.user.sub, type })
+      .first();
+
+    console.log(ctx.state.access);
+
+    await next();
+  };
+};
+
+oauthRouter.get("/auth/github/callback", fetchAccess("github"), async (ctx) => {
   const { code } = ctx.request.query;
 
-  const access = await db
-    .select("*")
-    .from("accesses")
-    .where({ user_id: ctx.state.user.sub, type: "github" })
-    .first();
+  const { access_token: token } = await fetch(
+    [
+      "https://github.com/login/oauth/access_token",
+      encode({
+        code,
+        client_id: process.env.GITHUB_CLIENT_ID,
+        client_secret: process.env.GITHUB_CLIENT_SECRET,
+      }),
+    ].join("?"),
+    {
+      method: "POST",
+      headers: {
+        Accept: "application/json",
+        "Content-Type": "application/json",
+      },
+    }
+  ).then((response) => response.json());
+
+  const { access } = ctx.state;
 
   if (!access) {
     await db("accesses").insert({
-      token: code,
+      token,
       user_id: ctx.state.user.sub,
       type: "github",
     });
