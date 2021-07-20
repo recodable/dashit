@@ -5,7 +5,7 @@ import Koa from "koa";
 import Router from "@koa/router";
 import cors from "@koa/cors";
 import body from "koa-body";
-import jwt from "koa-jwt";
+import jwt, { Options as JWTOptions } from "koa-jwt";
 import jwks from "jwks-rsa";
 
 dotenv.config({ path: join(process.cwd(), ".env.local") });
@@ -26,10 +26,8 @@ const app = new Koa();
 app.use(cors());
 app.use(body());
 
-const dashboardRouter = new Router();
-
-dashboardRouter.use(
-  jwt({
+const createJWTMiddleware = (options: Partial<JWTOptions> = {}) => {
+  return jwt({
     secret: jwks.koaJwtSecret({
       cache: true,
       rateLimit: true,
@@ -39,8 +37,13 @@ dashboardRouter.use(
     audience: process.env.VITE_API_URL,
     issuer: `https://${process.env.VITE_AUTH0_DOMAIN}/`,
     algorithms: ["RS256"],
-  })
-);
+    ...options,
+  });
+};
+
+const dashboardRouter = new Router();
+
+dashboardRouter.use(createJWTMiddleware());
 
 // dashboardRouter.use(async (ctx, next) => {
 //   await next();
@@ -152,6 +155,56 @@ publicRouter.get("/dashboards/:id", fetchDashboard, async (ctx) => {
 });
 
 app.use(publicRouter.routes()).use(publicRouter.allowedMethods());
+
+const accessRouter = new Router();
+
+accessRouter.get("/accesses", createJWTMiddleware(), async (ctx) => {
+  ctx.body = await db
+    .select("*")
+    .from("accesses")
+    .where({ user_id: ctx.state.user.sub });
+});
+
+app.use(accessRouter.routes()).use(accessRouter.allowedMethods());
+
+const oauthRouter = new Router();
+
+oauthRouter.use(
+  createJWTMiddleware({
+    getToken: (ctx) => {
+      return ctx.request.query.state as string;
+    },
+  })
+);
+
+oauthRouter.get("/auth/github", async (ctx) => {
+  ctx.redirect(
+    `https://github.com/login/oauth/authorize?client_id=${process.env.GITHUB_CLIENT_ID}&state=${ctx.request.query.state}`
+  );
+});
+
+oauthRouter.get("/auth/github/callback", async (ctx) => {
+  const { code } = ctx.request.query;
+
+  const access = await db
+    .select("*")
+    .from("accesses")
+    .where({ user_id: ctx.state.user.sub, type: "github" })
+    .first();
+
+  if (!access) {
+    await db("accesses").insert({
+      token: code,
+      user_id: ctx.state.user.sub,
+      type: "github",
+    });
+  }
+
+  // TODO: redirect to dashboard add page
+  ctx.redirect(process.env.WEB_URL);
+});
+
+app.use(oauthRouter.routes()).use(oauthRouter.allowedMethods());
 
 app.listen(8000, () => {
   console.log("API running on port 8000");

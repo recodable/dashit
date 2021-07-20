@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { createSignal, mergeProps } from "solid-js";
+import { createEffect, createSignal, mergeProps } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, Index, ErrorBoundary } from "solid-js/web";
 import { Transition, TransitionGroup } from "solid-transition-group";
@@ -12,6 +12,7 @@ import registry from "../registry";
 import type { RegisteredBlock } from "../types";
 import { useRouter } from "solid-app-router";
 import { useAuth0 } from "@rturnq/solid-auth0";
+import { useAuth } from "../auth";
 
 const needBlockSetup = (block: RegisteredBlock): boolean => !!block.setup;
 
@@ -21,6 +22,10 @@ const CreateBlock: Component = () => {
   const [router, { push }] = useRouter();
 
   const dashboardUrl = `/${router.params.id}`;
+
+  const { getToken } = useAuth0();
+
+  const [accesses] = useAuth();
 
   return (
     <div class="p-16 flex flex-col justify-center items-center">
@@ -53,6 +58,9 @@ const CreateBlock: Component = () => {
 
               const [hovered, setHovered] = createSignal(false);
 
+              const hasRequiredAccess = () =>
+                accesses()?.find((access) => access.type === key);
+
               return (
                 <li
                   onMouseEnter={() => setHovered(true)}
@@ -67,7 +75,7 @@ const CreateBlock: Component = () => {
                     exitClass="opacity-100"
                     exitToClass="opacity-0"
                   >
-                    <Show when={false && hovered()}>
+                    <Show when={!hasRequiredAccess() && hovered()}>
                       <div class="absolute inset-0 flex flex-col gap-6 justify-center items-center">
                         <div class="absolute inset-0 bg-gray-500 opacity-70 flex flex-col gap-6 justify-center items-center text-purple-200 z-20" />
 
@@ -78,8 +86,14 @@ const CreateBlock: Component = () => {
                           </p>
 
                           <button
-                            class="bg-black border-gray-900 px-7 py-4 shadow-lg text-lg font-semibold flex gap-3 items-center hover:bg-gray-800"
+                            onClick={async (e) => {
+                              const token = await getToken();
+                              window.location.href = `${
+                                import.meta.env.VITE_API_URL
+                              }/auth/${key}?state=${token}`;
+                            }}
                             type="button"
+                            class="bg-black border-gray-900 px-7 py-4 shadow-lg text-lg font-semibold flex gap-3 items-center hover:bg-gray-800"
                           >
                             <span>
                               Connect to <span class="capitalize">{key}</span>

@@ -1,5 +1,10 @@
 import type { Component } from "solid-js";
 
+export type Access = {
+  user_id: string;
+  type: string;
+};
+
 export type Dashboard = {
   id: number;
   name: string;
