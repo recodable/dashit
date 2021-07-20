@@ -40,16 +40,17 @@ const registry: { [k: string]: RegisteredBlock[] } = {
       },
     },
   ],
-  npm: [
-    {
-      name: "NPM Download",
-      description: "All NPM downloads informations",
-      Component: lazy(() => import("./npm/DownloadBlock")),
-      type: "npm/DownloadBlock",
-      // Setup: lazy(() => import("./github/SearchRepoForm")),
-      trendable: true,
-    },
-  ],
+
+  // npm: [
+  //   {
+  //     name: "NPM Download",
+  //     description: "All NPM downloads informations",
+  //     Component: lazy(() => import("./npm/DownloadBlock")),
+  //     type: "npm/DownloadBlock",
+  //     // Setup: lazy(() => import("./github/SearchRepoForm")),
+  //     trendable: true,
+  //   },
+  // ],
 };
 
 export default registry;
