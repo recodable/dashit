@@ -224,6 +224,32 @@ oauthRouter.get("/auth/github/callback", fetchAccess("github"), async (ctx) => {
 
 app.use(oauthRouter.routes()).use(oauthRouter.allowedMethods());
 
+const githubRouter = new Router();
+
+githubRouter.all(
+  "/github/:path*",
+  createJWTMiddleware(),
+  fetchAccess("github"),
+  async (ctx) => {
+    const { access } = ctx.state;
+
+    console.log({ access, body: typeof ctx.request.body });
+
+    ctx.body = await fetch(`https://api.github.com/${ctx.params.path}`, {
+      method: ctx.request.method,
+      ...(ctx.request.method !== "GET"
+        ? { body: JSON.stringify(ctx.request.body) }
+        : {}),
+      headers: {
+        Authorization: `Bearer ${access.token}`,
+        "Content-Type": "application/json",
+      },
+    }).then((response) => response.json());
+  }
+);
+
+app.use(githubRouter.routes()).use(githubRouter.allowedMethods());
+
 app.listen(8000, () => {
   console.log("API running on port 8000");
 });

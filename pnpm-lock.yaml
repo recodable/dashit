@@ -29,9 +29,11 @@ importers:
       koa-jwt: ^4.0.1
       koa-logger: ^3.2.1
       lodash.debounce: ^4.0.8
+      node-fetch: ^2.6.1
       nodemon: ^2.0.12
       pg: ^8.6.0
       postcss: ^8.3.5
+      redis: ^3.1.2
       solid-app-router: ^0.0.50
       solid-js: ^1.0.0
       solid-transition-group: ^0.0.8
@@ -56,7 +58,9 @@ importers:
       koa-jwt: 4.0.1
       koa-logger: 3.2.1
       lodash.debounce: 4.0.8
+      node-fetch: 2.6.1
       pg: 8.6.0
+      redis: 3.1.2
       solid-app-router: 0.0.50_solid-js@1.0.1
       solid-js: 1.0.1
       solid-transition-group: 0.0.8_solid-js@1.0.1
@@ -1110,6 +1114,11 @@ packages:
     resolution: {integrity: sha1-hMbhWbgZBP3KWaDvRM2HDTElD5o=}
     dev: false
 
+  /denque/1.5.0:
+    resolution: {integrity: sha512-CYiCSgIF1p6EUByQPlGkKnP1M9g0ZV3qMIrqMqZqdwazygIA/YP2vrbcyl1h/WppKJTdl1F85cXIle+394iDAQ==}
+    engines: {node: '>=0.10'}
+    dev: false
+
   /depd/1.1.2:
     resolution: {integrity: sha1-m81S4UwJd2PnSbJ0xDRu0uVgtak=}
     engines: {node: '>= 0.6'}
@@ -2026,6 +2035,11 @@ packages:
       lodash.toarray: 4.4.0
     dev: true
 
+  /node-fetch/2.6.1:
+    resolution: {integrity: sha512-V4aYg89jEoVRxRb2fJdAg8FHvI7cEyYdVAh94HH0UIK8oJxUfkjlDQN9RbMx+bEjP7+ggMiFRprSti032Oipxw==}
+    engines: {node: 4.x || >=6.0.0}
+    dev: false
+
   /node-releases/1.1.73:
     resolution: {integrity: sha512-uW7fodD6pyW2FZNZnp/Z3hvWKeEW1Y8R1+1CnErE8cXFXzl5blBOoVB41CvMer6P6Q0S5FXDwcHgFd1Wj0U9zg==}
     dev: true
@@ -2436,6 +2450,32 @@ packages:
     engines: {node: '>= 0.10'}
     dependencies:
       resolve: 1.20.0
+    dev: false
+
+  /redis-commands/1.7.0:
+    resolution: {integrity: sha512-nJWqw3bTFy21hX/CPKHth6sfhZbdiHP6bTawSgQBlKOVRG7EZkfHbbHwQJnrE4vsQf0CMNE+3gJ4Fmm16vdVlQ==}
+    dev: false
+
+  /redis-errors/1.2.0:
+    resolution: {integrity: sha1-62LSrbFeTq9GEMBK/hUpOEJQq60=}
+    engines: {node: '>=4'}
+    dev: false
+
+  /redis-parser/3.0.0:
+    resolution: {integrity: sha1-tm2CjNyv5rS4pCin3vTGvKwxyLQ=}
+    engines: {node: '>=4'}
+    dependencies:
+      redis-errors: 1.2.0
+    dev: false
+
+  /redis/3.1.2:
+    resolution: {integrity: sha512-grn5KoZLr/qrRQVwoSkmzdbw6pwF+/rwODtrOr6vuBRiR/f3rjSTGupbF90Zpqm2oenix8Do6RV7pYEkGwlKkw==}
+    engines: {node: '>=10'}
+    dependencies:
+      denque: 1.5.0
+      redis-commands: 1.7.0
+      redis-errors: 1.2.0
+      redis-parser: 3.0.0
     dev: false
 
   /reduce-css-calc/2.1.8:
