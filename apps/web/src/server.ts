@@ -9,6 +9,9 @@ import jwt, { Options as JWTOptions } from "koa-jwt";
 import jwks from "jwks-rsa";
 import fetch from "node-fetch";
 import { encode } from "querystring";
+import redis from "redis";
+import md5 from "md5";
+import { promisify } from "util";
 
 dotenv.config({ path: join(process.cwd(), ".env.local") });
 
@@ -22,6 +25,8 @@ const db = knex({
     database: process.env.DB_NAME,
   },
 });
+
+const cache = redis.createClient();
 
 const app = new Koa();
 
@@ -181,8 +186,6 @@ const fetchAccess = (type: string) => {
       .where({ user_id: ctx.state.user.sub, type })
       .first();
 
-    console.log(ctx.state.access);
-
     await next();
   };
 };
@@ -226,14 +229,28 @@ app.use(oauthRouter.routes()).use(oauthRouter.allowedMethods());
 
 const githubRouter = new Router();
 
+const getCache = promisify(cache.get).bind(cache);
+
+const cacheGraphql = async (ctx, next) => {
+  const key = md5(JSON.stringify(ctx.request.body));
+
+  const cachedData = await getCache(key);
+
+  if (cachedData) {
+    ctx.body = JSON.parse(cachedData);
+  } else {
+    await next();
+    cache.set(key, JSON.stringify(ctx.body), "EX", 60 * 60);
+  }
+};
+
 githubRouter.all(
   "/github/:path*",
   createJWTMiddleware(),
   fetchAccess("github"),
+  cacheGraphql,
   async (ctx) => {
     const { access } = ctx.state;
-
-    console.log({ access, body: typeof ctx.request.body });
 
     ctx.body = await fetch(`https://api.github.com/${ctx.params.path}`, {
       method: ctx.request.method,
