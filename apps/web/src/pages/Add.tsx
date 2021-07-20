@@ -21,7 +21,7 @@ const CreateBlock: Component = () => {
 
   const [router, { push }] = useRouter();
 
-  const dashboardUrl = `/${router.params.id}`;
+  const dashboardUrl = `/dashboards/${router.params.id}`;
 
   const { getToken } = useAuth0();
 
