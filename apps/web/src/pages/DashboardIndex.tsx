@@ -15,7 +15,10 @@ const DashboardIndex: Component = () => {
     const token = await getToken();
 
     return fetch(`${import.meta.env.VITE_API_URL}/dashboards`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     }).then((response) => response.json());
   });
 
@@ -28,6 +31,7 @@ const DashboardIndex: Component = () => {
       body: JSON.stringify({}),
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
     }).then((response) => response.json());
   };

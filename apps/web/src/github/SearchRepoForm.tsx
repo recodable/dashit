@@ -27,6 +27,7 @@ const SearchRepoForm: Component<{
     return fetch(`https://api.github.com/search/repositories?q=${search}`, {
       headers: {
         Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`,
+        "Content-Type": "application/json",
       },
     }).then((response) => response.json());
   };

@@ -12,7 +12,10 @@ export const AuthContextProvider = (props) => {
     const token = await getToken();
 
     return fetch(`${import.meta.env.VITE_API_URL}/accesses`, {
-      headers: { Authorization: `Bearer ${token}` },
+      headers: {
+        Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
+      },
     }).then((response) => response.json());
   });
 

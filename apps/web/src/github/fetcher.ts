@@ -1,21 +1,22 @@
-import { parseWithOptions } from "date-fns/fp";
 import { createResource } from "solid-js";
+import { useAuth0 } from "../../../../../solid-auth0/dist";
 
-export function createGithubRESTResource<T>(url: string, headers: object = {}) {
-  return createResource<T>(() => {
-    return fetch(`https://api.github.com/${url}`, {
-      headers: {
-        Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`,
-        ...headers,
-      },
-    }).then((response) => response.json());
-  });
-}
+// export function createGithubRESTResource<T>(url: string, headers: object = {}) {
+//   return createResource<T>(() => {
+//     return fetch(`https://api.github.com/${url}`, {
+//       headers: {
+//         Authorization: `token ${import.meta.env.VITE_GITHUB_API_KEY}`,
+//         ...headers,
+//       },
+//     }).then((response) => response.json());
+//   });
+// }
 
-const sendGraphqlQuery = (query: string) => {
-  return fetch("https://api.github.com/graphql", {
+const sendGraphqlQuery = (query: string, token: string) => {
+  return fetch(`${import.meta.env.VITE_API_URL}/github/graphql`, {
     headers: {
-      Authorization: `Bearer ${import.meta.env.VITE_GITHUB_API_KEY}`,
+      "Content-Type": "application/json",
+      Authorization: `Bearer ${token}`,
     },
     body: JSON.stringify({ query }),
     method: "POST",
@@ -32,9 +33,11 @@ export function createGithubGraphqlResource<R>(
     }
   ]
 ) {
+  const { getToken } = useAuth0();
   return createResource<R>(async () => {
     let data: R;
     const [query, options] = createQuery();
+    const token = await getToken();
 
     do {
       const newData = await sendGraphqlQuery(
@@ -42,7 +45,8 @@ export function createGithubGraphqlResource<R>(
           options?.afterCursor
             ? { afterCursor: options?.afterCursor(data) }
             : {}
-        )
+        ),
+        token
       );
 
       data = options?.merge && !!data ? options.merge(data, newData) : newData;

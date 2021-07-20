@@ -206,6 +206,7 @@ const EditableTitle: Component<{
         method: "PUT",
         body: JSON.stringify(formData),
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${token}`,
         },
       }

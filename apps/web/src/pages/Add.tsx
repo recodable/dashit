@@ -189,6 +189,7 @@ const createNewBlock = (
     {
       headers: {
         Authorization: `Bearer ${token}`,
+        "Content-Type": "application/json",
       },
       method: "POST",
       body: JSON.stringify({
