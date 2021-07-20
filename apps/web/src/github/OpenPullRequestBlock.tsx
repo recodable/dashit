@@ -1,5 +1,5 @@
 import type { Component } from "solid-js";
-import { createResource, mergeProps } from "solid-js";
+import { mergeProps } from "solid-js";
 import { Show } from "solid-js/web";
 import { SimpleMetricBlock } from "../blocks";
 import type { Props } from "./types";
@@ -15,7 +15,12 @@ const GithubOpenPullRequestBlock: Component<Props> = (props) => {
   return (
     <>
       <Show when={props.isPreview}>
-        <SimpleMetricBlock title="Github PR" value={() => 1234} uow="open PR" />
+        <SimpleMetricBlock
+          title="Github PR"
+          value={() => 1234}
+          uow="open PR"
+          badges={["your/repo"]}
+        />
       </Show>
 
       <Show when={!props.isPreview}>
