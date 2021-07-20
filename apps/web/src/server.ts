@@ -66,7 +66,7 @@ dashboardRouter.get("/dashboards", async (ctx) => {
 });
 
 dashboardRouter.post("/dashboards", async (ctx) => {
-  const { name = "(Untitled)" } = JSON.parse(ctx.request.body);
+  const { name = "(Untitled)" } = ctx.request.body;
 
   const [newDashboard] = await db("dashboards")
     .insert({ name, owner_id: ctx.state.user.sub })
@@ -103,7 +103,7 @@ dashboardRouter.put(
       .from("dashboards")
       .where({ id: ctx.params.id })
       .update({
-        name: JSON.parse(ctx.request.body).name || "(Untitled)",
+        name: ctx.request.body.name || "(Untitled)",
       })
       .returning("*");
 
@@ -116,7 +116,7 @@ dashboardRouter.post(
   fetchDashboard,
   checkDashboardOwnership,
   async (ctx) => {
-    const { type, settings } = JSON.parse(ctx.request.body);
+    const { type, settings } = ctx.request.body;
 
     const [newBlock] = await db
       .insert({
