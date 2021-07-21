@@ -31,11 +31,11 @@ fetchIntercept.register({
 render(
   () => (
     <Auth0
-      domain={import.meta.env.VITE_AUTH0_DOMAIN as string}
-      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID as string}
+      domain={import.meta.env.VITE_AUTH0_DOMAIN}
+      clientId={import.meta.env.VITE_AUTH0_CLIENT_ID}
       logoutRedirectUri={`${window.location.origin}/logout`}
       loginRedirectUri={`${window.location.origin}`}
-      audience={import.meta.env.VITE_API_URL as string}
+      audience={import.meta.env.VITE_API_URL}
     >
       <AuthContextProvider>
         <Switch>
