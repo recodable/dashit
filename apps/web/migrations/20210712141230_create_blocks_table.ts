@@ -7,7 +7,10 @@ export async function up(knex: Knex): Promise<void> {
     table.jsonb("settings").defaultTo(JSON.stringify({})).notNullable();
 
     table.integer("dashboard_id").notNullable();
-    table.foreign("dashboard_id").references("dashboards.id");
+    table
+      .foreign("dashboard_id")
+      .references("dashboards.id")
+      .onDelete("CASCADE");
 
     table.timestamps(true, true);
   });
