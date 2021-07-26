@@ -12,7 +12,7 @@ export type Dashboard = {
 };
 
 export interface DashboardWithBlocks extends Dashboard {
-  blocks: { settings: object; type: string }[];
+  blocks: { id: number; settings: object; type: string }[];
 }
 
 export type BlockSetup = {

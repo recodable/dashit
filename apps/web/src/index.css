@@ -23,7 +23,7 @@ h3 {
 }
 
 .card {
-  @apply rounded-lg bg-gray-800 text-white hover:bg-gray-700 cursor-pointer shadow overflow-hidden;
+  @apply rounded-lg bg-gray-800 text-white hover:bg-gray-700 cursor-pointer shadow;
 }
 
 .small-card {

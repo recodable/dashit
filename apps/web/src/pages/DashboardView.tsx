@@ -8,7 +8,6 @@ import {
 } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
-import { Transition } from "solid-transition-group";
 import { Link } from "solid-app-router";
 import { ExclamationCicle, Loading, Plus } from "../icons";
 import type { Dashboard, DashboardWithBlocks, RegisteredBlock } from "../types";
@@ -24,6 +23,8 @@ import {
 } from "../notifications";
 import { registeredBlocks } from "../registry";
 import { useAuth0 } from "@rturnq/solid-auth0";
+import FadeTransition from "../FadeTransition";
+import Dropdown from "../Dropdown";
 
 declare module "solid-js" {
   namespace JSX {
@@ -44,15 +45,8 @@ export function model<T>(el, value: () => Model<T>) {
 }
 
 const DashboardView: Component = () => {
-  // const test = "github/StarBlock";
-  // const [blocks, setBlocks] = createSignal([
-  //   lazy(() => import(`../${test}.tsx`)),
-  //   // lazy(() => import("../github/OpenIssueBlock")),
-  //   // lazy(() => import("../github/OpenPullRequestBlock")),
-  // ]);
-
   const [router, { replace }] = useRouter();
-  const { isAuthenticated, user } = useAuth0();
+  const { isAuthenticated, user, getToken } = useAuth0();
 
   const [dashboard, { mutate }] = createResource<DashboardWithBlocks>(
     async () => {
@@ -72,6 +66,27 @@ const DashboardView: Component = () => {
       replace("/404");
     }
   });
+
+  const deleteBlock = async (block) => {
+    const prevDashboard = dashboard();
+
+    mutate(() => {
+      return {
+        ...dashboard(),
+        blocks: dashboard().blocks.filter(({ id }) => id !== block.id),
+      };
+    });
+
+    fetch(`${import.meta.env.VITE_API_URL}/blocks/${block.id}`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${await getToken()}`,
+      },
+    }).catch((e) => {
+      mutate(prevDashboard);
+    });
+  };
 
   return (
     <>
@@ -120,7 +135,6 @@ const DashboardView: Component = () => {
                   >
                     <ErrorBoundary
                       fallback={(error, reset) => {
-                        console.log(error);
                         return (
                           <div
                             onClick={reset}
@@ -134,14 +148,7 @@ const DashboardView: Component = () => {
                         );
                       }}
                     >
-                      <Transition
-                        enterActiveClass="transition ease-in-out duration-150"
-                        enterClass="opacity-0"
-                        enterToClass="opacity-100"
-                        exitActiveClass="transition ease-in-out duration-150"
-                        exitClass="opacity-100"
-                        exitToClass="opacity-0"
-                      >
+                      <FadeTransition>
                         <Show when={registeredBlock().trendable && focused()}>
                           <div class="absolute top-0 right-0 px-3 py-2">
                             <select
@@ -160,7 +167,46 @@ const DashboardView: Component = () => {
                             </select>
                           </div>
                         </Show>
-                      </Transition>
+                      </FadeTransition>
+
+                      <FadeTransition>
+                        <Show when={focused()}>
+                          <div class="absolute bottom-0 right-0 px-5 py-3">
+                            <Dropdown
+                              items={[
+                                {
+                                  name: "Delete block",
+                                  onClick: () => deleteBlock(block),
+                                },
+                              ]}
+                              trigger={(props) => {
+                                return (
+                                  <button
+                                    onClick={props.onClick}
+                                    type="button"
+                                    class="rounded-full hover:bg-gray-600 p-1"
+                                  >
+                                    <svg
+                                      xmlns="http://www.w3.org/2000/svg"
+                                      class="h-5 w-5"
+                                      fill="none"
+                                      viewBox="0 0 24 24"
+                                      stroke="currentColor"
+                                    >
+                                      <path
+                                        stroke-linecap="round"
+                                        stroke-linejoin="round"
+                                        stroke-width="2"
+                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
+                                      />
+                                    </svg>
+                                  </button>
+                                );
+                              }}
+                            />
+                          </div>
+                        </Show>
+                      </FadeTransition>
 
                       <Suspense>
                         <Dynamic<{

@@ -9,17 +9,11 @@ import Navbar from "./Navbar";
 
 const App: Component = () => {
   return (
-    <div class="relative">
-      <ModalOutlet
-        Background={(props) => (
-          <BaseModalBackground
-            backgroundColor="black"
-            opacity={0.8}
-            {...props}
-          />
-        )}
-      />
-
+    <ModalOutlet
+      Background={(props) => (
+        <BaseModalBackground backgroundColor="black" opacity={0.8} {...props} />
+      )}
+    >
       <ToasterBag x="center" y="bottom" />
 
       <div class="min-h-screen min-w-screen pt-16">
@@ -29,7 +23,7 @@ const App: Component = () => {
           <Route />
         </main>
       </div>
-    </div>
+    </ModalOutlet>
   );
 };
 

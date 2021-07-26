@@ -77,7 +77,27 @@ const fetchDashboard = async (ctx, next) => {
     .where({ "dashboards.id": ctx.params.id })
     .first();
 
-  await next();
+  if (ctx.state.dashboard) {
+    await next();
+  } else {
+    ctx.status = 404;
+    ctx.body = "Not Found";
+  }
+};
+
+const fetchBlock = async (ctx, next) => {
+  ctx.state.block = await db
+    .select("*")
+    .from("blocks")
+    .where({ "blocks.id": ctx.params.id })
+    .first();
+
+  if (ctx.state.block) {
+    await next();
+  } else {
+    ctx.status = 404;
+    ctx.body = "Not Found";
+  }
 };
 
 const checkDashboardOwnership = async (ctx, next) => {
@@ -127,6 +147,12 @@ dashboardRouter.post(
     ctx.body = newBlock;
   }
 );
+
+dashboardRouter.delete("/blocks/:id", fetchBlock, async (ctx) => {
+  await db("blocks").where({ id: ctx.params.id }).del();
+
+  ctx.status = 204;
+});
 
 app.use(dashboardRouter.routes()).use(dashboardRouter.allowedMethods());
 
