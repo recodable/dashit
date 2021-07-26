@@ -148,11 +148,23 @@ dashboardRouter.post(
   }
 );
 
+// TODO: check block ownership
 dashboardRouter.delete("/blocks/:id", fetchBlock, async (ctx) => {
   await db("blocks").where({ id: ctx.params.id }).del();
 
   ctx.status = 204;
 });
+
+dashboardRouter.delete(
+  "/dashboards/:id",
+  fetchDashboard,
+  checkDashboardOwnership,
+  async (ctx) => {
+    await db("dashboards").where({ id: ctx.params.id }).del();
+
+    ctx.status = 204;
+  }
+);
 
 app.use(dashboardRouter.routes()).use(dashboardRouter.allowedMethods());
 

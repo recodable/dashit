@@ -9,7 +9,7 @@ import {
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
 import { Link } from "solid-app-router";
-import { ExclamationCicle, Loading, Plus } from "../icons";
+import { ExclamationCicle, Loading, Plus, VerticalDots } from "../icons";
 import type { Dashboard, DashboardWithBlocks, RegisteredBlock } from "../types";
 import { useRouter } from "solid-app-router";
 import type { Store, SetStoreFunction } from "solid-js/store";
@@ -186,20 +186,7 @@ const DashboardView: Component = () => {
                                     type="button"
                                     class="rounded-full hover:bg-gray-600 p-1"
                                   >
-                                    <svg
-                                      xmlns="http://www.w3.org/2000/svg"
-                                      class="h-5 w-5"
-                                      fill="none"
-                                      viewBox="0 0 24 24"
-                                      stroke="currentColor"
-                                    >
-                                      <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
-                                        d="M12 5v.01M12 12v.01M12 19v.01M12 6a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2zm0 7a1 1 0 110-2 1 1 0 010 2z"
-                                      />
-                                    </svg>
+                                    <VerticalDots class="w-5 h-5" />
                                   </button>
                                 );
                               }}
