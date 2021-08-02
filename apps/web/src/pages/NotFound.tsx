@@ -11,7 +11,7 @@ const NotFound: Component = () => {
         It looks like you reached an impasse
       </p>
 
-      <Link href="/" class="clickable-text">
+      <Link href="/" class="clickable-text" replace>
         <ArrowLeft class="w-4 h-4" />
 
         <span>Take me back</span>
