@@ -45,14 +45,8 @@ render(
             </div>
           </Match>
 
-          <Match when={!useAuth0().isAuthenticated()}>
-            <Router routes={unauthenticatedRoutes}>
-              <App />
-            </Router>
-          </Match>
-
           <Match when={true}>
-            <Router routes={routes}>
+            <Router>
               <App />
             </Router>
           </Match>

@@ -1,11 +1,11 @@
 import type { Component } from "solid-js";
 import { ChevronRight, Plus } from "../icons";
-import { createEffect, createResource, createMemo } from "solid-js";
+import { createResource } from "solid-js";
 import { Show, For } from "solid-js/web";
 import { Link } from "solid-app-router";
 import type { Dashboard } from "../types";
 import { TransitionGroup } from "solid-transition-group";
-import { useRouter } from "solid-app-router";
+import { useNavigate } from "solid-app-router";
 import { useAuth0 } from "@rturnq/solid-auth0";
 
 const DashboardIndex: Component = () => {
@@ -24,7 +24,7 @@ const DashboardIndex: Component = () => {
     }
   );
 
-  const [, { push }] = useRouter();
+  const navigate = useNavigate();
 
   const createNewDashboard = async () => {
     const token = await getToken();
@@ -48,7 +48,7 @@ const DashboardIndex: Component = () => {
             e.preventDefault();
             const newDashboard = await createNewDashboard();
             mutate([newDashboard, ...dashboards()]);
-            push(`/dashboards/${newDashboard.id}`);
+            navigate(`/dashboards/${newDashboard.id}`);
           }}
         >
           <button type="submit" class="button">

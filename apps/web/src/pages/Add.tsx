@@ -10,7 +10,7 @@ import { ChevronLeft, PlusCircle } from "../icons";
 import createHotkey from "../hotkey";
 import registry from "../registry";
 import type { RegisteredBlock } from "../types";
-import { useRouter } from "solid-app-router";
+import { useNavigate, useParams } from "solid-app-router";
 import { useAuth0 } from "@rturnq/solid-auth0";
 import { useAuth } from "../auth";
 
@@ -19,9 +19,10 @@ const needBlockSetup = (block: RegisteredBlock): boolean => !!block.setup;
 const CreateBlock: Component = () => {
   const [formData, setFormData] = createStore({ search: "" });
 
-  const [router, { push }] = useRouter();
+  const params = useParams();
+  const navigate = useNavigate();
 
-  const dashboardUrl = `/dashboards/${router.params.id}`;
+  const dashboardUrl = `/dashboards/${params.id}`;
 
   const { getToken } = useAuth0();
 
@@ -140,12 +141,12 @@ const CreateBlock: Component = () => {
                             <li
                               onClick={() => {
                                 if (!needBlockSetup(block)) {
-                                  return push(dashboardUrl);
+                                  return navigate(dashboardUrl);
                                 }
 
                                 setModal({
                                   Component: NewBlockModal,
-                                  data: { block },
+                                  data: { block, dashboardId: params.id },
                                 });
                               }}
                               onMouseEnter={() => setHovered(true)}
@@ -205,8 +206,9 @@ const createNewBlock = (
 const NewBlockModal: Component<{
   block: RegisteredBlock;
   closeModal: () => void;
+  dashboardId: number;
 }> = (props) => {
-  const [router, { push }] = useRouter();
+  const navigate = useNavigate();
 
   const [stepIndex, setStepIndex] = createSignal(0);
 
@@ -260,14 +262,14 @@ const NewBlockModal: Component<{
                   const token = await getToken();
 
                   await createNewBlock(
-                    router.params.id as string,
+                    props.dashboardId,
                     props.block,
                     settings,
                     token
                   );
 
                   props.closeModal();
-                  push(`/dashboards/${router.params.id}`);
+                  navigate(`/dashboards/${props.dashboardId}`);
                 }}
               />
             </ErrorBoundary>

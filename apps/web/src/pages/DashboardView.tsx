@@ -11,7 +11,7 @@ import { For, Dynamic, Show, ErrorBoundary, Suspense } from "solid-js/web";
 import { Link } from "solid-app-router";
 import { ExclamationCicle, Loading, Plus, VerticalDots } from "../icons";
 import type { Dashboard, DashboardWithBlocks, RegisteredBlock } from "../types";
-import { useRouter } from "solid-app-router";
+import { useParams, useNavigate } from "solid-app-router";
 import type { Store, SetStoreFunction } from "solid-js/store";
 import { createRenderEffect } from "solid-js";
 import createHotkey from "../hotkey";
@@ -45,14 +45,16 @@ export function model<T>(el, value: () => Model<T>) {
 }
 
 const DashboardView: Component = () => {
-  const [router, { replace }] = useRouter();
+  const navigate = useNavigate();
+  const params = useParams();
+
   const { isAuthenticated, user, getToken } = useAuth0();
 
   const [dashboard, { mutate }] = createResource<DashboardWithBlocks>(
     async () => {
       // const token = await getToken();
       return fetch(
-        `${import.meta.env.VITE_API_URL}/dashboards/${router.params.id}`
+        `${import.meta.env.VITE_API_URL}/dashboards/${params.id}`
         // { headers: { Authorization: `Bearer ${token}` } }
       ).then((response) => response.json());
     }
@@ -63,7 +65,7 @@ const DashboardView: Component = () => {
 
   createEffect(() => {
     if (dashboard?.error?.status === 404) {
-      replace("/404");
+      navigate("/404");
     }
   });
 
@@ -141,9 +143,7 @@ const DashboardView: Component = () => {
                             class="w-full h-full flex justify-center items-center gap-2 text-red-700"
                           >
                             <ExclamationCicle class="h-6 w-6" />
-                            <p class="">
-                              Couldn't load the data, click to retry
-                            </p>
+                            <p>Couldn't load the data, click to retry</p>
                           </div>
                         );
                       }}

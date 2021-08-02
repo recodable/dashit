@@ -1,14 +1,14 @@
 import { createEffect } from "solid-js";
-import { useRouter } from "solid-app-router";
+import { useNavigate } from "solid-app-router";
 import { useAuth0 } from "@rturnq/solid-auth0";
 
 const Home = () => {
-  const [, { replace }] = useRouter();
+  const navigate = useNavigate();
   const { isAuthenticated } = useAuth0();
 
   createEffect(() => {
     if (!isAuthenticated()) return;
-    replace("/dashboards");
+    navigate("/dashboards", { replace: true });
   });
 
   return <h1>Home</h1>;

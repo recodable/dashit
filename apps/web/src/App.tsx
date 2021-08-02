@@ -4,10 +4,15 @@ import {
   ModalBackground as BaseModalBackground,
   ToasterBag,
 } from "@guillotin/solid";
-import { Route } from "solid-app-router";
+import { useRoutes } from "solid-app-router";
 import Navbar from "./Navbar";
+import { useAuth0 } from "@rturnq/solid-auth0";
+import { routes, unauthenticatedRoutes } from "./routes";
 
 const App: Component = () => {
+  const { isAuthenticated } = useAuth0();
+  const Routes = useRoutes(!isAuthenticated() ? unauthenticatedRoutes : routes);
+
   return (
     <ModalProvider
       Background={(props) => (
@@ -19,7 +24,7 @@ const App: Component = () => {
           <Navbar />
 
           <main class="-pt-16">
-            <Route />
+            <Routes />
           </main>
         </div>
       </ToasterBag>

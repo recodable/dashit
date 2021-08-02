@@ -10,7 +10,7 @@ importers:
       '@guillotin/solid': ^0.0.5
       '@koa/cors': ^3.1.0
       '@koa/router': ^10.0.0
-      '@rturnq/solid-auth0': link:../../../solid-auth0
+      '@rturnq/solid-auth0': ^0.2.1
       '@types/koa': ^2.13.4
       '@types/koa__cors': ^3.0.3
       '@types/koa__router': ^8.0.7
@@ -35,7 +35,7 @@ importers:
       pg: ^8.6.0
       postcss: ^8.3.5
       redis: ^3.1.2
-      solid-app-router: ^0.0.50
+      solid-app-router: ^0.1.3
       solid-js: ^1.0.0
       solid-transition-group: ^0.0.8
       tailwindcss: ^2.2.4
@@ -48,7 +48,7 @@ importers:
       '@guillotin/solid': 0.0.5
       '@koa/cors': 3.1.0
       '@koa/router': 10.0.0
-      '@rturnq/solid-auth0': link:../../../solid-auth0
+      '@rturnq/solid-auth0': 0.2.1_solid-js@1.0.1
       date-fns: 2.22.1
       fetch-intercept: 2.4.0
       hotkeys-js: 3.8.7
@@ -63,7 +63,7 @@ importers:
       node-fetch: 2.6.1
       pg: 8.6.0
       redis: 3.1.2
-      solid-app-router: 0.0.50_solid-js@1.0.1
+      solid-app-router: 0.1.3_solid-js@1.0.1
       solid-js: 1.0.1
       solid-transition-group: 0.0.8_solid-js@1.0.1
       ts-node: 10.1.0_081fe99ef5db98b82a83fd528bee8c5c
@@ -85,6 +85,17 @@ importers:
       vite-plugin-solid: 2.0.0
 
 packages:
+
+  /@auth0/auth0-spa-js/1.6.5:
+    resolution: {integrity: sha512-pS5jF5DAHXeDssN9cJwOqAbgLYhJaXD2EBgeXkjfB3rrNcd7bYC9rOGckRTqyS2k2A05/N2aaRFnju81AgSDgQ==}
+    dependencies:
+      browser-tabs-lock: 1.2.14
+      core-js: 3.16.0
+      es-cookie: 1.3.2
+      fast-text-encoding: 1.0.3
+      promise-polyfill: 8.2.0
+      unfetch: 4.2.0
+    dev: false
 
   /@babel/code-frame/7.14.5:
     resolution: {integrity: sha512-9pzDqyc6OLDaqe+zbACgFkb6fKMNG6CObKpnYXChRsvYGyEdc7CA2BaqeOM+vOtCS5ndmJicPJhKAwYRI6UfFw==}
@@ -439,6 +450,15 @@ packages:
     engines: {node: '>=10.13.0'}
     dev: false
 
+  /@rturnq/solid-auth0/0.2.1_solid-js@1.0.1:
+    resolution: {integrity: sha512-6p55XjyP0tWjECKhghA1L1P7ZIo3j6N85xF0Zdz975vWzJMQ6qK4jIOSgEKAeOUx0lbo2DwpYQWps587SX5xBw==}
+    peerDependencies:
+      solid-js: ^1.0.0
+    dependencies:
+      '@auth0/auth0-spa-js': 1.6.5
+      solid-js: 1.0.1
+    dev: false
+
   /@sindresorhus/is/0.14.0:
     resolution: {integrity: sha512-9NET910DNaIPngYnLLPeg+Ogzqsi9uM4mSboU5y6p8S5DzMTVEsJZrawi+BoDNUVBa2DhJqQYUFvMDfgU062LQ==}
     engines: {node: '>=6'}
@@ -769,6 +789,13 @@ packages:
       fill-range: 7.0.1
     dev: true
 
+  /browser-tabs-lock/1.2.14:
+    resolution: {integrity: sha512-ssSpCRcvFe4vc098LDnrJOQDfZiG35KhQGB9hthTbwJk5mmUkePwhcMlW61NH3YuIE2Y9uGLqf9yxEBKbaDlaw==}
+    requiresBuild: true
+    dependencies:
+      lodash: 4.17.21
+    dev: false
+
   /browserslist/4.16.6:
     resolution: {integrity: sha512-Wspk/PqO+4W9qp5iUTJsa1B/QrYn1keNCcEP5OvP7WBwT4KaDly0uONYmC6Xa3Z5IqnUgS0KcgLYu1l74x0ZXQ==}
     engines: {node: ^6 || ^7 || ^8 || ^9 || ^10 || ^11 || ^12 || >=13.7}
@@ -1037,6 +1064,11 @@ packages:
       keygrip: 1.1.0
     dev: false
 
+  /core-js/3.16.0:
+    resolution: {integrity: sha512-5+5VxRFmSf97nM8Jr2wzOwLqRo6zphH2aX+7KsAUONObyzakDNq2G/bgbhinxB4PoV9L3aXQYhiDKyIKWd2c8g==}
+    requiresBuild: true
+    dev: false
+
   /cosmiconfig/7.0.0:
     resolution: {integrity: sha512-pondGvTuVYDk++upghXJabWzL6Kxu6f26ljFw64Swq9v6sQPUL3EUlVDV56diOjpCayKihL6hVe8exIACU4XcA==}
     engines: {node: '>=10'}
@@ -1232,6 +1264,10 @@ packages:
       is-arrayish: 0.2.1
     dev: true
 
+  /es-cookie/1.3.2:
+    resolution: {integrity: sha512-UTlYYhXGLOy05P/vKVT2Ui7WtC7NiRzGtJyAKKn32g5Gvcjn7KAClLPWlipCtxIus934dFg9o9jXiBL0nP+t9Q==}
+    dev: false
+
   /esbuild/0.12.15:
     resolution: {integrity: sha512-72V4JNd2+48eOVCXx49xoSWHgC3/cCy96e7mbXKY+WOWghN00cCmlGnwVLRhRHorvv0dgCyuMYBZlM2xDM5OQw==}
     hasBin: true
@@ -1270,6 +1306,10 @@ packages:
       merge2: 1.4.1
       micromatch: 4.0.4
     dev: true
+
+  /fast-text-encoding/1.0.3:
+    resolution: {integrity: sha512-dtm4QZH9nZtcDt8qJiOH9fcQd1NAgi+K1O2DbE6GG1PPCK/BWfOH3idCTRQ4ImXRUOyopDEgDEnVEE7Y/2Wrig==}
+    dev: false
 
   /fastq/1.11.1:
     resolution: {integrity: sha512-HOnr8Mc60eNYl1gzwp6r5RoUyAn5/glBolUzP/Ez6IFVPMPirxn/9phgL6zhOtaTy7ISwPvQ+wT+hfcRZh/bzw==}
@@ -2393,6 +2433,10 @@ packages:
     engines: {node: '>= 0.8'}
     dev: true
 
+  /promise-polyfill/8.2.0:
+    resolution: {integrity: sha512-k/TC0mIcPVF6yHhUvwAp7cvL6I2fFV7TzF1DuGPI8mBh4QQazf36xCKEHKTZKRysEoTQoQdKyP25J8MPJp7j5g==}
+    dev: false
+
   /pseudomap/1.0.2:
     resolution: {integrity: sha1-8FKijacOYYkX7wqKw0wa5aaChrM=}
     dev: false
@@ -2652,8 +2696,8 @@ packages:
       is-arrayish: 0.3.2
     dev: true
 
-  /solid-app-router/0.0.50_solid-js@1.0.1:
-    resolution: {integrity: sha512-TjaTCuvDeBEqTiIYcvGltM/Ae9y/qurOr5g47DvMdgR/8XiMhoktBH9weISXcxqb4KE4cVaaoAV+G+5tboEDEA==}
+  /solid-app-router/0.1.3_solid-js@1.0.1:
+    resolution: {integrity: sha512-Su//M8U4w/GVJqIbxPOcWPtrGBFoV0m+Ob7/Gs86fhAMOwCui9XWji/st4sGLDUzcxp4uTNWVSLjVsBlFUiw/Q==}
     peerDependencies:
       solid-js: ^1.0.0
     dependencies:
@@ -3005,6 +3049,10 @@ packages:
     dependencies:
       debug: 2.6.9
     dev: true
+
+  /unfetch/4.2.0:
+    resolution: {integrity: sha512-F9p7yYCn6cIW9El1zi0HI6vqpeIvBsr3dSuRO6Xuppb1u5rXpCPmMvLSyECLhybr9isec8Ohl0hPekMVrEinDA==}
+    dev: false
 
   /unique-string/2.0.0:
     resolution: {integrity: sha512-uNaeirEPvpZWSgzwsPGtU2zVSTrn/8L5q/IexZmH0eH6SA73CmAA5U4GwORTxQAZs95TAXLNqeLoPPNO5gZfWg==}

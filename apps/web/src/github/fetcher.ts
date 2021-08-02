@@ -1,5 +1,5 @@
 import { createResource } from "solid-js";
-import { useAuth0 } from "../../../../../solid-auth0/dist";
+import { useAuth0 } from "@rturnq/solid-auth0";
 
 // export function createGithubRESTResource<T>(url: string, headers: object = {}) {
 //   return createResource<T>(() => {

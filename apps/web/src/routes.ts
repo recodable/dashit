@@ -1,19 +1,19 @@
-import DashboardView from "./pages/DashboardView";
-import Add from "./pages/Add";
-import NotFound from "./pages/NotFound";
-import Logout from "./pages/Logout";
-import NeedAuth from "./pages/NeedAuth";
-import DashboardIndex from "./pages/DashboardIndex";
-import Home from "./pages/Home";
+import { lazy } from "solid-js";
 
 export const routes = [
-  { path: "/", component: Home },
-  { path: "/dashboards", component: DashboardIndex },
-  { path: "/logout", component: Logout },
-  { path: "/dashboards/:id", component: DashboardView },
-  { path: "/dashboards/:id/add", component: Add },
-  { path: "/404", component: NotFound },
-  { path: "*all", component: NotFound },
+  { path: "/", component: lazy(() => import("./pages/Home")) },
+  {
+    path: "/dashboards",
+    component: lazy(() => import("./pages/DashboardIndex")),
+  },
+  { path: "/logout", component: lazy(() => import("./pages/Logout")) },
+  {
+    path: "/dashboards/:id",
+    component: lazy(() => import("./pages/DashboardView")),
+  },
+  { path: "/dashboards/:id/add", component: lazy(() => import("./pages/Add")) },
+  { path: "/404", component: lazy(() => import("./pages/NotFound")) },
+  { path: "*all", component: lazy(() => import("./pages/NotFound")) },
 ];
 
 export const publicRoutes = ["/", "/dashboards/:id", "/logout", "/404", "*all"];
@@ -23,6 +23,6 @@ export const unauthenticatedRoutes = routes.map((route) => {
 
   return {
     ...route,
-    component: NeedAuth,
+    component: lazy(() => import("./pages/NeedAuth")),
   };
 });
