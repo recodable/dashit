@@ -15,7 +15,7 @@ import { useRouter } from "solid-app-router";
 import type { Store, SetStoreFunction } from "solid-js/store";
 import { createRenderEffect } from "solid-js";
 import createHotkey from "../hotkey";
-import { addNotification, dismissNotification } from "@guillotin/solid";
+import { useToasterBag } from "@guillotin/solid";
 import {
   UpdatingNotification,
   SuccessfullyUpdatedNotification,
@@ -227,6 +227,7 @@ const EditableTitle: Component<{
   const [edit, setEdit] = createSignal(false);
   const [formData, setFormData] = createStore({ name: props.dashboard.name });
   const { getToken } = useAuth0();
+  const { addNotification, dismissNotification } = useToasterBag();
 
   const update = async () => {
     const token = await getToken();

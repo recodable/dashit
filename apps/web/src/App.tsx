@@ -1,6 +1,6 @@
 import type { Component } from "solid-js";
 import {
-  ModalOutlet,
+  ModalProvider,
   ModalBackground as BaseModalBackground,
   ToasterBag,
 } from "@guillotin/solid";
@@ -9,21 +9,21 @@ import Navbar from "./Navbar";
 
 const App: Component = () => {
   return (
-    <ModalOutlet
+    <ModalProvider
       Background={(props) => (
         <BaseModalBackground backgroundColor="black" opacity={0.8} {...props} />
       )}
     >
-      <ToasterBag x="center" y="bottom" />
+      <ToasterBag x="center" y="bottom">
+        <div class="min-h-screen min-w-screen pt-16">
+          <Navbar />
 
-      <div class="min-h-screen min-w-screen pt-16">
-        <Navbar />
-
-        <main class="-pt-16">
-          <Route />
-        </main>
-      </div>
-    </ModalOutlet>
+          <main class="-pt-16">
+            <Route />
+          </main>
+        </div>
+      </ToasterBag>
+    </ModalProvider>
   );
 };
 

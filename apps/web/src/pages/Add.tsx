@@ -3,7 +3,7 @@ import { createEffect, createSignal, mergeProps } from "solid-js";
 import { createStore } from "solid-js/store";
 import { For, Dynamic, Show, Index, ErrorBoundary } from "solid-js/web";
 import { Transition, TransitionGroup } from "solid-transition-group";
-import { setModal } from "@guillotin/solid";
+import { useModal } from "@guillotin/solid";
 import SearchField from "../SearchField";
 import { Link } from "solid-app-router";
 import { ChevronLeft, PlusCircle } from "../icons";
@@ -26,6 +26,8 @@ const CreateBlock: Component = () => {
   const { getToken } = useAuth0();
 
   const [accesses] = useAuth();
+
+  const { setModal } = useModal();
 
   return (
     <div class="p-16 flex flex-col justify-center items-center">

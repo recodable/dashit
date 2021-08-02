@@ -38,10 +38,6 @@ const DashboardIndex: Component = () => {
     }).then((response) => response.json());
   };
 
-  createEffect(() => {
-    console.log(dashboards());
-  });
-
   return (
     <div class="p-16 flex flex-col items-center mx-auto" style="width: 768px;">
       <div class="flex justify-between items-baseline w-full">
